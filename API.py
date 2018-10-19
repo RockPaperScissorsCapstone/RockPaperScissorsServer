@@ -1,23 +1,25 @@
 from Queue import myQueue
 from DataBaseManager import DBManager
-import array as arr
+import socket
 
-def class api:
+class api:
 
     def __init__(self):
+        hi = "hi"
     
-    
-    def createAccount(que):
-        userEmail =decoded(que.removefromq())
-        userName = decoded(que.removefromq())
-        userPassword = decoded(que.removefromq())
-        userFirstName = decoded(que.removefromq())
-        userLastName = decoded(que.removefromq())
-        userInfo =  arr.array(userName, userEmail, userPassword, userFirstName, userLastName)
-        return DBManager.CreateAccount(userInfo)
-        
+    def Decoded(self, data):
+        result = data.decode('cp437')
+        return result
 
-    def decoded(data):
-        return data.decode('cp437')
+    def CreateAccount(self, que):
+        userName = self.Decoded(que.removefromq())
+        userEmail = self.Decoded(que.removefromq())
+        userFirstName = self.Decoded(que.removefromq())
+        userLastName = self.Decoded(que.removefromq())
+        userPassword = self.Decoded(que.removefromq())
+        userInfo = [userName, userEmail, userPassword, userFirstName, userLastName]
+        dbm = DBManager()
+        return dbm.CreateAccount(userInfo)
+        
                             
                                     
