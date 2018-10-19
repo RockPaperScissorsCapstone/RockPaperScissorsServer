@@ -1,5 +1,6 @@
 import socket
 from Queue import myQueue
+from API import api
 HOST = '172.31.20.135'
 PORT= 65432
 def main():
@@ -10,6 +11,7 @@ def main():
             s.listen()
             conn, addr = s.accept()
             myQue = myQueue()
+            result = ''
             funtion = ''
             endData = 1
             with conn:
@@ -25,9 +27,12 @@ def main():
                 print("function = " + function)
                 print("reached")
                 if(function == "CreateAccount"):
-                    print("was able to get first entry from que")
+                    APICommand = api()
+                    result = APICommand.CreateAccount(myQue)
+                    print("result: " + result)
                 else:
                     print("didn't match")
+                conn.sendall(result.encode('ascii'))
 
         print("Connection Closed")
 
