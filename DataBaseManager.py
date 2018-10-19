@@ -3,11 +3,7 @@ from mysql.connector import errorcode
 import array
 
 class DBManager:
-<<<<<<< HEAD
-    cnx = None
-=======
     cnx = ''
->>>>>>> acf0d92fe55ad48a4826a0292f8be6e1ff7153d2
     def __init__(self):
         try:
             self.cnx = mysql.connector.connect(user='DatabaseConnect', password='dbConnect',
