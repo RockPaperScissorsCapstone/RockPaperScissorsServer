@@ -1,8 +1,8 @@
 import mysql.connector
 import array
 
-def class DBManager:
-    private cnx = ''
+class DBManager:
+    cnx = None
     def __init__(self):
         try:
             cnx = mysql.connector.connect(user='DatabaseConnect', password='dbConnect',

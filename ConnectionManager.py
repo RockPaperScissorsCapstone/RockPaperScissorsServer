@@ -19,7 +19,7 @@ def main():
                     myQue.addtoq(data)
                     if data.decode('cp437') == "end":
                         break
-                    print(data.decode('cp437'));
+                    print(data.decode('cp437'))
                     conn.sendall(data)
                 function = (myQue.removefromq()).decode('cp437')
                 print("function = " + function)
