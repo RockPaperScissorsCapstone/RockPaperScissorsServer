@@ -1,11 +1,12 @@
 import mysql.connector
+from mysql.connector import errorcode
 import array
 
-def class DBManager:
-    private cnx = ''
+class DBManager:
+    cnx = ''
     def __init__(self):
         try:
-            cnx = mysql.connector.connect(user='DatabaseConnect', password='dbConnect',
+            self.cnx = mysql.connector.connect(user='DatabaseConnect', password='dbConnect',
                                   host='127.0.0.1',
                                   database='sys')
         except mysql.connector.Error as err:
@@ -16,5 +17,18 @@ def class DBManager:
             else:
                 print(err)
         
-    def CreateAccount(userInfo):
-        
+    def CreateAccount(self, userInfo):
+        add_user = ("INSERT INTO rps_user "
+                "(RPS_username, RPS_email, RPS_pass, RPS_fName, RPS_lName) "
+                "VALUES (%s, %s, %s, %s, %s)")
+        cursor = self.cnx.cursor()
+        try:
+            cursor.execute(add_user, userInfo)
+            self.cnx.commit()
+            cursor.close()
+            self.cnx.close()
+            return("User added successfully")
+        except mysql.connector.Error as err:
+            cursor.close()
+            self.cnx.close()
+            return("unable to add user")
