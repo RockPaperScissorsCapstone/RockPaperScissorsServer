@@ -11,8 +11,8 @@ def main():
             s.listen()
             conn, addr = s.accept()
             myQue = myQueue()
-            result = ''
-            funtion = ''
+            result = None
+            function = ''
             endData = 1
             with conn:
                 print('Connected by', addr)
@@ -30,9 +30,16 @@ def main():
                     APICommand = api()
                     result = APICommand.CreateAccount(myQue)
                     print("result: " + result)
+                    conn.sendall(result.encode(encoding='ascii'))
+                elif(function == "GetAccountInfo"):
+                    APICommand = api()
+                    result = APICommand.GetAccountInfo(myQue)
+                    print("result: " + result)
+                    conn.sendall(result.encode('ascii'))
                 else:
                     print("didn't match")
-                conn.sendall(result.encode('ascii'))
+                    conn.sendall("not a matching function")
+                
 
         print("Connection Closed")
 
