@@ -20,6 +20,11 @@ class api:
         userInfo = [userName, userEmail, userPassword, userFirstName, userLastName]
         dbm = DBManager()
         return dbm.CreateAccount(userInfo)
+
+    def GetAccountInfo(self, que):
+        userID = self.Decoded(que.removefromq())
+        dbm = DBManager()
+        return dbm.getAccountInfo(userID)
         
                             
                                     
