@@ -1,4 +1,5 @@
 import mysql.connector
+import socket
 from mysql.connector import errorcode
 import array
 
@@ -32,3 +33,22 @@ class DBManager:
             cursor.close()
             self.cnx.close()
             return("unable to add user")
+
+    def getAccountInfo(self, param):
+        print("param = " + param)
+        get_account = ("SELECT RPS_username FROM sys.rps_user WHERE RPS_User_id = %s")
+        cursor = self.cnx.cursor(buffered=True)
+        try:
+            cursor.execute(get_account, (param,))
+            result = str(cursor.fetchone()[0])
+            self.cnx.commit()
+            cursor.close()
+            self.cnx.close()
+            #print("Returned value from db = ")
+            #print(result)
+            return result
+        except mysql.connector.Error as err:
+            cursor.close()
+            self.cnx.close()
+            #print(err)
+            return err
