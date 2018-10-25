@@ -20,6 +20,24 @@ class api:
         userInfo = [userName, userEmail, userPassword, userFirstName, userLastName]
         dbm = DBManager()
         return dbm.CreateAccount(userInfo)
-        
-                            
+
+    def GetAccountInfo(self, que):
+        userID = self.Decoded(que.removefromq())
+        dbm = DBManager()
+        return dbm.getAccountInfo(userID)
+    
+    def Login(self, que):
+        userName = self.Decoded(que.removefromq())
+        password = self.Decoded(que.removefromq())
+        userInfo=[userName, password]
+        dbm = DBManager()
+        return dbm.Login(userInfo)
+       
+    def AI_fetch(self, que):
+        userID = self.Decoded(que.removefromq())
+        pmove = self.Decoded(que.removefromq())
+        presult = self.Decoded(que.removefromq())
+        moveInfo = [userID, pmove, presult]
+        dbm = DBManager()
+        return dbm.AI_fetch(moveInfo)
                                     
