@@ -54,7 +54,7 @@ class DBManager:
     
     def getAccountInfo(self, param):
         print("param = " + param)
-        get_account = ("SELECT RPS_username FROM sys.rps_user WHERE RPS_User_id = %s")
+        get_account = ("SELECT RPS_username, RPS_wins, RPS_loses FROM sys.rps_user WHERE RPS_User_id = %s")
         cursor = self.cnx.cursor(buffered=True)
         try:
             cursor.execute(get_account, (param,))
