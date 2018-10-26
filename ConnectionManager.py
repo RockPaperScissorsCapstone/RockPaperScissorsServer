@@ -1,7 +1,7 @@
 import socket
 from Queue import myQueue
 from API import api
-HOST = '172.31.20.135'
+HOST = '172.31.47.99'
 PORT= 65432
 def main():
     print("server is up")
@@ -19,11 +19,12 @@ def main():
                 while True:
                     data = conn.recv(1024)
                     myQue.addtoq(data)
-                    if data.decode('cp437') == "end":
+                    if data.decode('ascii') == "end":
+                        conn.sendall(data)
                         break
-                    print(data.decode('cp437'))
+                    print(data.decode('ascii'))
                     conn.sendall(data)
-                function = (myQue.removefromq()).decode('cp437')
+                function = (myQue.removefromq()).decode('ascii')
                 print("function = " + function)
                 print("reached")
                 if(function == "CreateAccount"):
@@ -45,7 +46,7 @@ def main():
                     APICommand = api()
                     result = APICommand.AI_fetch(myQue)
                     print("result: " + result)
-                    con.sendall(result.encode(encoding='ascii'))
+                    conn.sendall(result.encode(encoding='ascii'))
                 else:
                     print("didn't match")
                     conn.sendall("not a matching function")

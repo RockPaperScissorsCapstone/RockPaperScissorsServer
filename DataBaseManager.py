@@ -7,8 +7,8 @@ class DBManager:
     cnx = ''
     def __init__(self):
         try:
-            self.cnx = mysql.connector.connect(user='DatabaseConnect', password='dbConnect',
-                                  host='127.0.0.1',
+            self.cnx = mysql.connector.connect(user='rpsdb1', password='tekashi69',
+                                  host='rpsdb1.cs0eeakwgvyu.us-east-2.rds.amazonaws.com',
                                   database='sys')
         except mysql.connector.Error as err:
             if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
@@ -19,7 +19,7 @@ class DBManager:
                 print(err)
         
     def CreateAccount(self, userInfo):
-        add_user = ("INSERT INTO rps_user "
+        add_user = ("INSERT INTO RPS_User "
                 "(RPS_username, RPS_email, RPS_pass, RPS_fName, RPS_lName) "
                 "VALUES (%s, %s, %s, %s, %s)")
         cursor = self.cnx.cursor()
@@ -35,16 +35,16 @@ class DBManager:
             return err
 
     def Login(self, userInfo):
-        login = ("SELECT COUNT(*) FROM rps_user WHERE RPS_username = %s AND RPS_pass = %s")
-        cursor = self.cnx.cursor()
+        login = ("SELECT RPS_User_id FROM RPS_User WHERE RPS_username = %s AND RPS_pass = %s")
+        cursor = self.cnx.cursor(buffered=True)
         try:
             cursor.execute(login, userInfo)
-            result = cursor.fetchone()
-            self.cnx.commit()
+            rows = cursor.rowcount
+            userId = str(cursor.fetchone()[0])
             cursor.close()
             self.cnx.close()
-            if result == 1:
-                return ("Login Success")
+            if rows == 1:
+                return (userId)
             else:
                 return ("Login Failure")
         except mysql.connector.Error as err:
