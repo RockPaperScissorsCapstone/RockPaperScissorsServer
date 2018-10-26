@@ -23,6 +23,8 @@ class api:
 
     def GetAccountInfo(self, que):
         userID = self.Decoded(que.removefromq())
+		win = self.Decoded(que.removefromq())
+		loss = self.Decoded(que.removefromq())
         dbm = DBManager()
         return dbm.getAccountInfo(userID)
     
