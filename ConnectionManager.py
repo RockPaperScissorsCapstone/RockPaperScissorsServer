@@ -47,10 +47,15 @@ def main():
                     result = APICommand.AI_fetch(myQue)
                     print("result: " + result)
                     conn.sendall(result.encode(encoding='ascii'))
+                #Start session
+                elif(function == "Session"):
+                    APICommand = api()
+                    result = APICommand.CreateSession(conn)
+                    print("Session Started")
                 else:
                     print("didn't match")
                     conn.sendall("not a matching function")
-                
+                conn.sendall(result.encode('ascii'))
 
         print("Connection Closed")
 

@@ -1,5 +1,6 @@
 from Queue import myQueue
 from DataBaseManager import DBManager
+from Session import StartSession
 import socket
 
 class api:
@@ -42,4 +43,11 @@ class api:
         moveInfo = [userID, pmove, presult]
         dbm = DBManager()
         return dbm.AI_fetch(moveInfo)
+        
+    def CreateSession(conn):
+        session = Session() 
+        return session.StartSession(conn)
+        
+        
+                            
                                     
