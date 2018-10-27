@@ -11,7 +11,7 @@ class DBManager:
             # Production Credentials
             #self.cnx = mysql.connector.connect(user='rpsdb1', password='tekashi69',
             #                     host='rpsdb1.cs0eeakwgvyu.us-east-2.rds.amazonaws.com',
-            #                      database='sys')
+            #                      database='rpsdb1')
 
             #Nick's Test Credentials
             self.cnx = mysql.connector.connect(user='rpsNick', password='Connection',
