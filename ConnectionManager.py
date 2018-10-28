@@ -2,7 +2,9 @@ import socket
 from Queue import myQueue
 from API import api
 HOST = '172.31.47.99'
-PORT= 65432
+PORT = 65432
+
+
 def main():
     print("server is up")
     while True:
@@ -19,7 +21,7 @@ def main():
                 while True:
                     data = conn.recv(1024)
                     myQue.addtoq(data)
-                    if data.decode('ascii') == "end":
+                    if (data.decode('ascii') == "end"):
                         conn.sendall(data)
                         break
                     print(data.decode('ascii'))
@@ -47,7 +49,7 @@ def main():
                     result = APICommand.AI_fetch(myQue)
                     print("result: " + result)
                     conn.sendall(result.encode(encoding='ascii'))
-                #Start session
+                # Start session
                 elif(function == "Session"):
                     APICommand = api()
                     result = APICommand.CreateSession(conn)
@@ -59,5 +61,5 @@ def main():
 
         print("Connection Closed")
 
-main()
 
+main()
