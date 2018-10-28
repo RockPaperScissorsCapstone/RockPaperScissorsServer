@@ -144,8 +144,8 @@ class session:
                 print("AI wins")
                 winnerId = AIid
                 matchHistoryInfo = []
-                matchHistoryInfo.append(pID)
                 matchHistoryInfo.append(AIid)
+                matchHistoryInfo.append(pID)
                 matchHistoryInfo.append(winnerId)
                 matchHistoryInfo.append(dateToday)
                 dbm.updateMatchHistory(matchHistoryInfo)
