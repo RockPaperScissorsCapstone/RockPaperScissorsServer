@@ -173,3 +173,17 @@ class DBManager:
             cursor.close()
             self.cnx.close()
             return err
+
+    def updateMatchHistory(self,param):
+        add_record = ("INSERT INTO Match_History (RPS_User_id_one, RPS_User_id_two, RPS_winner, MH_date) VALUES (%d,%d,%d,%s)")
+        cursor = self.cnx.cursor()
+        try:
+            cursor.execute(add_record,param)
+            self.cnx.commit()
+            cursor.close()
+            self.cnx.close()
+            return ("record added successfully")
+        except mysql.connector.Error as err:
+            cursor.close()
+            self.cnx.close()
+            return err
