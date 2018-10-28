@@ -23,13 +23,13 @@ class api:
         userInfo = [userName, userEmail, userPassword, userFirstName, userLastName]
         dbm = DBManager()
         return dbm.CreateAccount(userInfo)
-    # DEPRICATED AND WILL BE CHANGED TO THE UPDATEACCOUNGINFO FUNCTION
-    def GetAccountInfo(self, que):
+
+    def UpdateAccountInfo(self, que):
         userID = self.Decoded(que.removefromq())
-		#win = self.Decoded(que.removefromq())
-		#loss = self.Decoded(que.removefromq())
+        userName = self.Decoded(que.removefromq())
         dbm = DBManager()
-        return dbm.getAccountInfo(userID)
+        param = [userName, userID]
+        return dbm.updateAccountInfo(param)
     
     def Login(self, que):
         userName = self.Decoded(que.removefromq())

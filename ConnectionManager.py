@@ -47,9 +47,9 @@ def main():
                     print("result: " + result)
                     conn.sendall(result.encode(encoding='ascii'))
                 # Starts the update Account process NEEDS TO BE REDONE OLD FUNCTION IS DEPRICATED
-                elif(function == "GetAccountInfo"):
+                elif(function == "UpdateAccountInfo"):
                     APICommand = api()
-                    result = APICommand.GetAccountInfo(myQue)
+                    result = APICommand.UpdateAccountInfo(myQue)
                     print("result: " + result)
                     conn.sendall(result.encode('ascii'))
                 # Starts the login process

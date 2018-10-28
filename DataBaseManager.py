@@ -48,7 +48,7 @@ class DBManager:
             self.cnx.commit()
             cursor.close()
             self.cnx.close()
-            return("User added successfully")
+            return("1")
         except mysql.connector.Error as err:
             cursor.close()
             self.cnx.close()
@@ -115,19 +115,19 @@ class DBManager:
             self.cnx.close()
             return err
     #   DEPRICATED AND WILL BE CHANGED TO THE UPDATEACCOUNTINFO FUNCTION
-    def getAccountInfo(self, param):
-        print("param = " + param)
-        get_account = ("SELECT rps_user_username, rps_user_wins, rps_user_losses FROM rps_user WHERE rps_user_id = %s")
+    def updateAccountInfo(self, param):
+        #print("param = " + param)
+        get_account = ("UPDATE rps_user SET rps_user_username = %s WHERE rps_user_id = %s")
         cursor = self.cnx.cursor(buffered=True)
         try:
-            cursor.execute(get_account, (param,))
-            result = str(cursor.fetchone()[0])
+            cursor.execute(get_account, param)
+            #result = str(cursor.fetchone()[0])
             self.cnx.commit()
             cursor.close()
             self.cnx.close()
             #print("Returned value from db = ")
             #print(result)
-            return result
+            return "1"
         except mysql.connector.Error as err:
             cursor.close()
             self.cnx.close()
