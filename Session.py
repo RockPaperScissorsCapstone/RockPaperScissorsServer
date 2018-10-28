@@ -3,6 +3,7 @@
 import socket
 from Queue import myQueue
 from DataBaseManager import DBManager
+from datetime import date
 
 class session:
     myQue = None
@@ -15,6 +16,7 @@ class session:
         aiWins = 0
         pmove = 4
         presult = 3
+        dateToday = str(date.today())
         dbm = DBManager()
 
         while (aiWins < 2 or playerWins < 2):
@@ -22,6 +24,7 @@ class session:
             pID = conn.recv(1024)
             playerMove = conn.recv(1024)
             pID = pID.decode('ascii')
+            AIid = 99999
             pMove = conn.decode('ascii')
             AI_input = []
             AI_input.append(int(pID))
@@ -127,6 +130,13 @@ class session:
             #conn.sendall(data)
             print("Game Over.")
             if(playerWins == 2):
+                winnerId = pID
+                matchHistoryInfo = []
+                matchHistoryInfo.append(pID)
+                matchHistoryInfo.append(AIid)
+                matchHistoryInfo.append(winnerId)
+                matchHistoryInfo.append(dateToday)
+
                 print("Player wins")
                 return 1
             else:
