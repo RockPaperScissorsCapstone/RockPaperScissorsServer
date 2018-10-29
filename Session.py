@@ -1,30 +1,31 @@
-# Session is currently implemented for best 2-of-3 game
-# to be applied to dummy AI
+#Session is currently implemented for best 2-of-3 game 
+#to be applied to dummy AI
+import socket
+from Queue import myQueue
 
-
-class Session:
-
-
+class session:
+    myQue = None
     def __init__(self):
         print("Session started")
+        self.myQue = myQueue()
 
-    def startSession(conn):
-        playerwins = 0
+    def startSession(self, conn):
+        playerWins = 0
         aiWins = 0
 
         while (aiWins < 2 or playerWins < 2):
             data = conn.recv(1024)
-            myQue.addtoq(data)
-            aiMove = -1
+            self.myQue.addtoq(data)
+            aiMove = -1 
             #
             #  AI IMPLEMENTATION HERE TO SELECT MOVE
             #
             playerMove = data.decode('cp437')
-
-            # Player Input invalid (Timeout, etc)
-            if (playerMove == 0):
+    
+            #Player Input invalid (Timeout, etc)
+            if(playerMove == 0): 
                 aiWins += 1
-            # Player and AI Play same move, round doesn't count
+            #Player and AI Play same move, round doesn't count
             if(playerMove == aiMove):
                 break
             elif(playerMove == 1 and aiMove == 2):  # Player: rock, AI: paper
@@ -42,12 +43,19 @@ class Session:
             else:
                 print("No Move Present")
 
-            print("Player move: " + playerMove + ". AI move: " + aiMove)
+            #print("Player move: " + playerMove ". AI move: " + aiMove)
 
-            # conn.sendall(data)
+            #conn.sendall(data)
+            print("Game Over.")
+            if(playerWins == 2):
+                print("Player wins")
+                return 1
+            else:
+                print("AI wins")
+                return 0
 
         print("Game Over.")
-        if (playerwins == 2):
+        if (playerWins == 2):
             print("Player wins")
             return 1
         else:

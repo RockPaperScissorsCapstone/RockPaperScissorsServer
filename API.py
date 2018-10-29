@@ -1,16 +1,18 @@
 from Queue import myQueue
 from DataBaseManager import DBManager
-from Session import Session
+from Session import session
 import socket
 
 
 class api:
 
     def __init__(self):
-        hi = "hi"
+        hi = "hello"
 
     def Decoded(self, data):
+        print(data)
         result = data.decode('cp437')
+        print(result)
         return result
 
     def CreateAccount(self, que):
@@ -28,13 +30,13 @@ class api:
         dbm = DBManager()
         return dbm.CreateAccount(userInfo)
 
-    def GetAccountInfo(self, que):
+    def UpdateAccountInfo(self, que):
         userID = self.Decoded(que.removefromq())
-        win = self.Decoded(que.removefromq())
-        loss = self.Decoded(que.removefromq())
+        userName = self.Decoded(que.removefromq())
         dbm = DBManager()
-        return dbm.getAccountInfo(userID)
-
+        param = [userName, userID]
+        return dbm.updateAccountInfo(param)
+    
     def Login(self, que):
         userName = self.Decoded(que.removefromq())
         password = self.Decoded(que.removefromq())
@@ -49,7 +51,11 @@ class api:
         moveInfo = [userID, pmove, presult]
         dbm = DBManager()
         return dbm.AI_fetch(moveInfo)
-
-    def CreateSession(conn):
-        session = Session()
-        return session.StartSession(conn)
+        
+    def CreateSession(self, conn):
+        apiSession = session() 
+        return apiSession.startSession(conn)
+        
+        
+                            
+                                    
