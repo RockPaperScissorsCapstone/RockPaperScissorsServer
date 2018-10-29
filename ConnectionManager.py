@@ -63,7 +63,7 @@ def main():
                     APICommand = api()
                     result = APICommand.AI_fetch(myQue)
                     print("result: " + result)
-                    conn.sendall(result.encode(encoding='ascii'))
+                    conn.sendall(str(result).encode(encoding='ascii'))
                 # Starts session
                 elif(function == "Session"):
                     APICommand = api()
