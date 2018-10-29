@@ -4,7 +4,6 @@ from mysql.connector import errorcode
 import array
 import json
 
-
 class DBManager:
     cnx = None
     def __init__(self):
@@ -133,13 +132,14 @@ class DBManager:
             cursor.close()
             self.cnx.close()
             #print(err)
-            return str(err)
+            return err
     
     def AI_fetch(self, move_Info):
-        query1 = ("SELECT COUNT(*) FROM move_history WHERE rps_user_id = %s, move_history_pMove = %s, move_history_result = %s, move_history_move = Rock")
-        query2 = ("SELECT COUNT(*) FROM move_history WHERE rps_user_id = %s, move_history_pMove = %s, move_history_result = %s, move_history_move = Paper")
-        query3 = ("SELECT COUNT(*) FROM move_history WHERE rps_user_id = %s, move_history_pMove = %s, move_history_result = %s, move_history_move = Scissors")
-        cursor = self.cnx.cursor()
+        print(move_Info)
+        query1 = ("SELECT COUNT(*) FROM move_history WHERE rps_user_id = %s AND move_history_pMove = %s AND move_history_pResult = %s AND move_history_move = 1")
+        query2 = ("SELECT COUNT(*) FROM move_history WHERE rps_user_id = %s AND move_history_pMove = %s AND move_history_pResult = %s AND move_history_move = 2")
+        query3 = ("SELECT COUNT(*) FROM move_history WHERE rps_user_id = %s AND move_history_pMove = %s AND move_history_pResult = %s AND move_history_move = 3")
+        cursor = self.cnx.cursor(buffered=True)
         try:
             cursor.execute(query1, move_Info)
             result1 = cursor.fetchone()
@@ -150,12 +150,40 @@ class DBManager:
             self.cnx.commit()
             cursor.close()
             self.cnx.close()
-            if result1 > result2 and result1 > result3:
-                return "Paper"
-            elif result2 > result3 and result2 > result1:
-                return "Scissors"
+            if result1[0] > result2[0] and result1[0] > result3[0]:
+                return 2
+            elif result2[0] > result3[0] and result2[0] > result1[0]:
+                return 3
             else:
-                return "Rock"
+                return 1
+        except mysql.connector.Error as err:
+            cursor.close()
+            self.cnx.close()
+            return err
+    
+    def move_Insert(self, move_Info):
+        query = ("INSERT into move_history (rps_user_id, move_history_pMove, move_history_pResult, move_history_move, move_history_result, move_history_round) VALUES (%s, %s, %s, %s, %s, %s)")
+        cursor = self.cnx.cursor(buffered=True)
+        try:
+            cursor.execute(query, move_Info)
+            self.cnx.commit()
+            cursor.close()
+            self.cnx.close()
+            return 1
+        except mysql.connector.Error as err:
+            cursor.close()
+            self.cnx.close()
+            return err
+
+    def updateWinLoss(self, param):
+        query = ("UPDATE rps_user SET rps_user_wins = %s, rps_user_losses = %s WHERE rps_user_id = %s")
+        cursor = self.cnx.cursor(buffered=True)
+        try:
+            cursor.execute(query, param)
+            self.cnx.commit()
+            cursor.close()
+            self.cnx.close()
+            return "Updated Win and Loss!"
         except mysql.connector.Error as err:
             cursor.close()
             self.cnx.close()

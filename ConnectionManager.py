@@ -3,10 +3,10 @@ from Queue import myQueue
 from API import api
 
 # Production Host
-# HOST = '172.31.47.99'
+HOST = '172.31.47.99'
 
 # Nicks Test Host
-HOST = '172.31.20.135'
+# HOST = '172.31.20.135'
 PORT= 65432
 def main():
     print("server is up")
@@ -68,11 +68,16 @@ def main():
                 elif(function == "Session"):
                     APICommand = api()
                     result = APICommand.CreateSession(conn)
-                    print("Session Started")
+                    conn.sendall(result.encode(encoding='ascii'))
+                elif(function == "UpdateWinLoss"):
+                    APICommand = api()
+                    result = APICommand.UpdateWinLoss(myQue)
+                    print("result: " + result)
+                    conn.sendall(result.encode('ascii'))
                 else:
                     print("didn't match")
                     conn.sendall("not a matching function")
         print("Connection Closed")
 
-
 main()
+

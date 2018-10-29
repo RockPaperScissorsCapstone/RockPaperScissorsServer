@@ -3,7 +3,6 @@ from DataBaseManager import DBManager
 from Session import session
 import socket
 
-
 class api:
 
     def __init__(self):
@@ -21,12 +20,7 @@ class api:
         userFirstName = self.Decoded(que.removefromq())
         userLastName = self.Decoded(que.removefromq())
         userPassword = self.Decoded(que.removefromq())
-        userInfo = [
-            userName,
-            userEmail,
-            userPassword,
-            userFirstName,
-            userLastName]
+        userInfo = [userName, userEmail, userPassword, userFirstName, userLastName]
         dbm = DBManager()
         return dbm.CreateAccount(userInfo)
 
@@ -40,11 +34,11 @@ class api:
     def Login(self, que):
         userName = self.Decoded(que.removefromq())
         password = self.Decoded(que.removefromq())
-        userInfo = [userName, password]
+        userInfo=[userName, password]
         dbm = DBManager()
         return dbm.Login(userInfo)
-
-    def AI_fetch(self, que):
+       
+    def AI_fetch(self, que):#FOR TESTING PURPOSES ONLY
         userID = self.Decoded(que.removefromq())
         pmove = self.Decoded(que.removefromq())
         presult = self.Decoded(que.removefromq())
@@ -55,7 +49,11 @@ class api:
     def CreateSession(self, conn):
         apiSession = session() 
         return apiSession.startSession(conn)
-        
-        
-                            
-                                    
+
+    def UpdateWinLoss(self, que):
+        wins = self.Decoded(que.removefromq())
+        losses = self.Decoded(que.removefromq())
+        userID = self.Decoded(que.removefromq())
+        dbm = DBManager()
+        param = [wins, losses, userID]
+        return dbm.updateWinLoss(param)
