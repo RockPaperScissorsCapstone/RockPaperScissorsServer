@@ -49,7 +49,11 @@ class api:
     def CreateSession(self, conn):
         apiSession = session() 
         return apiSession.startSession(conn)
-        
-        
-                            
-                                    
+
+    def UpdateWinLoss(self, que):
+        wins = self.Decoded(que.removefromq())
+        losses = self.Decoded(que.removefromq())
+        userID = self.Decoded(que.removefromq())
+        dbm = DBManager()
+        param = [wins, losses, userID]
+        return dbm.updateWinLoss(param)
