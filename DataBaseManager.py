@@ -132,7 +132,7 @@ class DBManager:
             cursor.close()
             self.cnx.close()
             #print(err)
-            return err
+            return str(err)
     
     def AI_fetch(self, move_Info):
         query1 = ("SELECT COUNT(*) FROM move_history WHERE rps_user_id = %s, move_history_pMove = %s, move_history_result = %s, move_history_move = Rock")
