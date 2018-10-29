@@ -161,7 +161,7 @@ class DBManager:
             return err
     
     def move_Insert(self, move_Info):
-        query = ("INSERT into move_history (rps_user_id, move_history_pMove, move_history_pResult, move_history_move, move_history_result) VALUES(%d, %d, %d, %d, %d)")
+        query = ("INSERT into move_history (rps_user_id, move_history_pMove, move_history_pResult, move_history_move, move_history_result, move_history_round) VALUES(%d, %d, %d, %d, %d, %d)")
         cursor = self.cnx.cursor()
         try:
             cursor.execute(query, move_Info)

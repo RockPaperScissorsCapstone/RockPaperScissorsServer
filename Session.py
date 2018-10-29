@@ -15,6 +15,7 @@ class session:
         aiWins = 0
         pmove = 4
         presult = 3
+        round = 1
         dbm = DBManager()
 
         while (aiWins < 2 or playerWins < 2):
@@ -35,6 +36,7 @@ class session:
             #Player Input invalid (Timeout, etc)
             if(playerMove == 0): 
                 aiWins += 1
+                round += 1
             #Player and AI Play same move, round doesn't count
             if(playerMove == aiMove):
                 result = 2
@@ -44,9 +46,11 @@ class session:
                 move_Input.append(presult)
                 move_Input.append(playerMove)
                 move_Input.append(result)
+                move_Input.append(round)
                 dbm.move_Insert(move_Input)
                 pmove = playerMove
                 presult = result
+                round += 1
             elif(playerMove == 1 and aiMove == 2): #Player: rock, AI: paper
                 aiWins += 1
                 result = 0
@@ -56,9 +60,11 @@ class session:
                 move_Input.append(presult)
                 move_Input.append(playerMove)
                 move_Input.append(result)
+                move_Input.append(round)
                 dbm.move_Insert(move_Input)
                 pmove = playerMove
                 presult = result
+                round += 1
             elif(playerMove == 1 and aiMove == 3): #Player: rock, AI: Scissors
                 playerWins += 1
                 result = 1
@@ -68,9 +74,11 @@ class session:
                 move_Input.append(presult)
                 move_Input.append(playerMove)
                 move_Input.append(result)
+                move_Input.append(round)
                 dbm.move_Insert(move_Input)
                 pmove = playerMove
                 presult = result
+                round += 1
             elif(playerMove == 2 and aiMove == 1): #Player: Paper, AI: Rock
                 playerWins += 1
                 result = 1
@@ -80,9 +88,11 @@ class session:
                 move_Input.append(presult)
                 move_Input.append(playerMove)
                 move_Input.append(result)
+                move_Input.append(round)
                 dbm.move_Insert(move_Input)
                 pmove = playerMove
                 presult = result
+                round += 1
             elif(playerMove == 2 and aiMove == 3): #Player: Paper, AI: Scissors
                 aiWins += 1
                 result = 0
@@ -92,9 +102,11 @@ class session:
                 move_Input.append(presult)
                 move_Input.append(playerMove)
                 move_Input.append(result)
+                move_Input.append(round)
                 dbm.move_Insert(move_Input)
                 pmove = playerMove
                 presult = result
+                round += 1
             elif(playerMove == 3 and aiMove == 1): #Player: Scissors, AI: Rock
                 aiWins += 1
                 result = 0
@@ -104,9 +116,11 @@ class session:
                 move_Input.append(presult)
                 move_Input.append(playerMove)
                 move_Input.append(result)
+                move_Input.append(round)
                 dbm.move_Insert(move_Input)
                 pmove = playerMove
                 presult = result
+                round += 1
             elif(playerMove == 3 and aiMove == 2): #Player: Scissors, AI: Paper
                 playerWins += 1
                 result = 1
@@ -116,9 +130,11 @@ class session:
                 move_Input.append(presult)
                 move_Input.append(playerMove)
                 move_Input.append(result)
+                move_Input.append(round)
                 dbm.move_Insert(move_Input)
                 pmove = playerMove
                 presult = result
+                round += 1
             else:
                 print("No Move Present")
 
