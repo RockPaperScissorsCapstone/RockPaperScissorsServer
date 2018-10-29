@@ -3,10 +3,10 @@ from Queue import myQueue
 from API import api
 
 # Production Host
-HOST = '172.31.47.99'
+#HOST = '172.31.47.99'
 
 # Nicks Test Host
-# HOST = '172.31.20.135'
+HOST = '172.31.20.135'
 PORT= 65432
 def main():
     print("server is up")
@@ -36,7 +36,9 @@ def main():
                         break
                     myQue.addtoq(data)
                     print(data.decode('ascii'))
+                    print("Sending back Message")
                     conn.sendall(data)
+                    print("Message Sent")
                 function = (myQue.removefromq()).decode('ascii')
                 print("function = " + function)
                 print("reached")
@@ -63,7 +65,7 @@ def main():
                     APICommand = api()
                     result = APICommand.AI_fetch(myQue)
                     print("result: " + result)
-                    conn.sendall(result.encode(encoding='ascii'))
+                    conn.sendall(str(result).encode(encoding='ascii'))
                 # Starts session
                 elif(function == "Session"):
                     APICommand = api()
