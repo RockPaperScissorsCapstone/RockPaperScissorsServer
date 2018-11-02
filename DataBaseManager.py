@@ -188,3 +188,41 @@ class DBManager:
             cursor.close()
             self.cnx.close()
             return err
+    
+    def addFriend(self, twofriends):
+        query = ("INSERT INTO Friends (Player_id, Player2_id) VALUES (%s, %s)")
+        cursor = self.cnx.cursor(buffered = True)
+        try:
+            cursor.execute(query, twofriends)
+            self.cnx.commit()
+            cursor.close()
+            self.cnx.close()
+            return "1"
+        except mysql.connector.Error as err:
+            cursor.close()
+            self.cnx.close()
+            return err
+    
+    def findFriends(self, user_id):
+        query = ("SELECT Player_id FROM Friends WHERE Player2_id = %s UNION SELECT Player2_id FROM Friends WHERE Player_id = %s")
+        inHouse = []
+        inHouse.append(user_id[0])
+        inHouse.append(user_id[0])
+        cursor = self.cnx.cursor()
+        try:
+            cursor.execute(query, inHouse)
+            sqlretval = cursor.fetchall()
+            cursor.close()
+            self.cnx.close()
+            holdretval = ()
+            for x in sqlretval:
+                holdretval = holdretval + x
+            retval = ""
+            for x in holdretval:
+                retval = retval + x
+                retval = retval + ","
+            return retval
+        except mysql.connector.Error as err:
+            cursor.close()
+            self.cnx.close()
+            return err

@@ -39,7 +39,7 @@ class session:
                 aiWins += 1
                 round += 1
             #Player and AI Play same move, round doesn't count
-            elif(playerMove == 1 and aiMove == 1):
+            elif(playerMove == aiMove):
                 dbm = DBManager()
                 result = 2
                 move_Input = []
