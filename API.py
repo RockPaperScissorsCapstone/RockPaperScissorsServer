@@ -16,10 +16,15 @@ class api:
 
     def CreateAccount(self, que):
         userName = self.Decoded(que.removefromq())
+        print("username = " + userName)
         userEmail = self.Decoded(que.removefromq())
+        print("email = " + userEmail)
         userFirstName = self.Decoded(que.removefromq())
+        print("firstname = " + userFirstName)
         userLastName = self.Decoded(que.removefromq())
+        print("lastname = " + userLastName)
         userPassword = self.Decoded(que.removefromq())
+        print("password = " + userPassword)
         userInfo = [userName, userEmail, userPassword, userFirstName, userLastName]
         dbm = DBManager()
         return dbm.CreateAccount(userInfo)
