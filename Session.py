@@ -1,14 +1,12 @@
-#Session is currently implemented for best 2-of-3 game 
++#Session is currently implemented for best 2-of-3 game 
 #to be applied to dummy AI
 import socket
 from Queue import myQueue
 from DataBaseManager import DBManager
 
 class session:
-    myQue = None
     def __init__(self):
         print("Session started")
-        self.myQue = myQueue()
 
     def startSession(self, conn):
         print("started session")
@@ -27,7 +25,6 @@ class session:
             playerMove = playerMove.decode('ascii')
             AI_input = [int(pID), int(pmove), int(presult)]
             
-            self.myQue.addtoq(AI_input)
             aiMove = dbm.AI_fetch(AI_input)
             playerMove = int(playerMove)
             
