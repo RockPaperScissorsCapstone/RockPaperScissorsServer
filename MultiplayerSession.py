@@ -6,10 +6,13 @@ class MultiplayerSession:
         print("Multiplayer started")
 
     def startMultiplayerSession(self, conn1, conn2):
-        conn1.sendall("1".encode('ascii'))
-        conn2.sendall("1".encode('ascii'))
         conn1ID = int(conn1.recv(1024).decode('ascii'))
         conn2ID = int(conn2.recv(1024).decode('ascii'))
+        conn1.sendall(str(conn2ID).encode('ascii'))
+        conn2.sendall(str(conn1ID).encode('ascii'))
+        conn1.sendall("1".encode('ascii'))
+        conn2.sendall("1".encode('ascii'))
+        
         print("Multiplayer started")
         conn1wins = 0
         conn2wins = 0
