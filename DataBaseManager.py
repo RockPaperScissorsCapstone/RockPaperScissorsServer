@@ -191,10 +191,10 @@ class DBManager:
         
     #Needs integration with multiplayer code
     def updateScore(self, param):
-        winnerId = param[1] 
-        winnerScore = param[2] 
-        loserId = param[3]
-        loserScore = param[4]
+        winnerId = param[0] 
+        winnerScore = param[1] 
+        loserId = param[2]
+        loserScore = param[3]
         scoreCalc = 10 #The score to be added/subtracted due to win/loss, before underdog bonus
         #Checks if there is an 'underdog' and applies score bonus accordingly
         if(loserScore - winnerScore >= 100): 
