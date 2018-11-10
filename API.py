@@ -57,3 +57,16 @@ class api:
         dbm = DBManager()
         param = [wins, losses, userID]
         return dbm.updateWinLoss(param)
+
+    def UpdateScore(self, que):
+        winnerId = self.Decoded(que.removefromq())
+        winnerScore = self.Decoded(que.removefromq())
+        loserId = self.Decoded(que.removefromq())
+        loserScore = self.Decoded(que.removefromq())
+        dbm = DBManager()
+        param = [winnerId, winnerScore, loserId, loserScore]
+        return dbm.updateScore(param);
+        
+    def Leaderboard(self, que):
+        dbm = DBManager()
+        return dbm.leaderboard

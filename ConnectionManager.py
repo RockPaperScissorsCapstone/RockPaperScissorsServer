@@ -69,14 +69,28 @@ def main():
                     APICommand = api()
                     result = APICommand.CreateSession(conn)
                     conn.sendall(result.encode(encoding='ascii'))
+                # Updates Win/Loss record
                 elif(function == "UpdateWinLoss"):
                     APICommand = api()
                     result = APICommand.UpdateWinLoss(myQue)
                     print("result: " + result)
                     conn.sendall(result.encode('ascii'))
+                # Updates winner and loser scores
+                elif(function == "UpdateScore"):
+                    APICommand = api()
+                    result = APICommand.UpdateScore(myQue)
+                    print("result: " + result)
+                    conn.sendall(result.encode('ascii'))
+                # Retrieves leaderbord data
+                elif(function == "Leaderboard"):
+                    APICommand = api()
+                    result = APICommand.Leaderboard(myQue)
+                    print("result: " + result)
+                    conn.sendall(result.encode('ascii'))
                 else:
                     print("didn't match")
                     conn.sendall("not a matching function")
+            
         print("Connection Closed")
 
 main()
