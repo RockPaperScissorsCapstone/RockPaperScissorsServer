@@ -1,9 +1,20 @@
 import socket
+import threading
 from DataBaseManager import DBManager
 
-class MultiplayerSession:
-    def __init__(self):
+class MultiplayerSession(threading.Thread):
+
+    player1 = None
+    player2 = None
+
+    def __init__(self, player1, player2):
+        threading.Thread.__init__(self)
         print("Multiplayer started")
+        self.player1 = player1
+        self.player2 = player2
+
+    def run(self):
+        self.startMultiplayerSession(self.player1, self.player2)
 
     def startMultiplayerSession(self, conn1, conn2):
         conn1ID = int(conn1.recv(1024).decode('ascii'))
@@ -33,18 +44,18 @@ class MultiplayerSession:
                 conn2.sendall("0".encode('ascii'))
                 conn1Data.append(conn1ID)
                 conn1Data.append(pconn1move)
-                conn1Data.append(pconn1Result)
+                conn1Data.append(pconn1result)
                 conn1Data.append(conn1Move)
                 conn1Data.append(2)
                 conn1Data.append(round)
-                dbmconn1.moveInsert(conn1Data)
+                dbmconn1.move_Insert(conn1Data)
                 conn2Data.append(conn2ID)
                 conn2Data.append(pconn2move)
-                conn2Data.append(pconn2Result)
+                conn2Data.append(pconn2result)
                 conn2Data.append(conn2Move)
                 conn2Data.append(2)
                 conn2Data.append(round)
-                dbmconn2.moveInsert(conn2Data)
+                dbmconn2.move_Insert(conn2Data)
                 pconn1move = conn1Move
                 pconn2move = conn2Move
                 pconn1result = 2
@@ -54,18 +65,18 @@ class MultiplayerSession:
                 conn2.sendall("1".encode('ascii'))
                 conn1Data.append(conn1ID)
                 conn1Data.append(pconn1move)
-                conn1Data.append(pconn1Result)
+                conn1Data.append(pconn1result)
                 conn1Data.append(conn1Move)
                 conn1Data.append(0)
                 conn1Data.append(round)
-                dbmconn1.moveInsert(conn1Data)
+                dbmconn1.move_Insert(conn1Data)
                 conn2Data.append(conn2ID)
                 conn2Data.append(pconn2move)
-                conn2Data.append(pconn2Result)
+                conn2Data.append(pconn2result)
                 conn2Data.append(conn2Move)
                 conn2Data.append(1)
                 conn2Data.append(round)
-                dbmconn2.moveInsert(conn2Data)
+                dbmconn2.move_Insert(conn2Data)
                 pconn1move = conn1Move
                 pconn2move = conn2Move
                 pconn1result = 0
@@ -76,18 +87,18 @@ class MultiplayerSession:
                 conn2.sendall("1".encode('ascii'))
                 conn1Data.append(conn1ID)
                 conn1Data.append(pconn1move)
-                conn1Data.append(pconn1Result)
+                conn1Data.append(pconn1result)
                 conn1Data.append(conn1Move)
                 conn1Data.append(0)
                 conn1Data.append(round)
-                dbmconn1.moveInsert(conn1Data)
+                dbmconn1.move_Insert(conn1Data)
                 conn2Data.append(conn2ID)
                 conn2Data.append(pconn2move)
-                conn2Data.append(pconn2Result)
+                conn2Data.append(pconn2result)
                 conn2Data.append(conn2Move)
                 conn2Data.append(1)
                 conn2Data.append(round)
-                dbmconn2.moveInsert(conn2Data)
+                dbmconn2.move_Insert(conn2Data)
                 pconn1move = conn1Move
                 pconn2move = conn2Move
                 pconn1result = 0
@@ -98,18 +109,18 @@ class MultiplayerSession:
                 conn2.sendall("1".encode('ascii'))
                 conn1Data.append(conn1ID)
                 conn1Data.append(pconn1move)
-                conn1Data.append(pconn1Result)
+                conn1Data.append(pconn1result)
                 conn1Data.append(conn1Move)
                 conn1Data.append(0)
                 conn1Data.append(round)
-                dbmconn1.moveInsert(conn1Data)
+                dbmconn1.move_Insert(conn1Data)
                 conn2Data.append(conn2ID)
                 conn2Data.append(pconn2move)
-                conn2Data.append(pconn2Result)
+                conn2Data.append(pconn2result)
                 conn2Data.append(conn2Move)
                 conn2Data.append(1)
                 conn2Data.append(round)
-                dbmconn2.moveInsert(conn2Data)
+                dbmconn2.move_Insert(conn2Data)
                 pconn1move = conn1Move
                 pconn2move = conn2Move
                 pconn1result = 0
@@ -120,18 +131,18 @@ class MultiplayerSession:
                 conn2.sendall("-1".encode('ascii'))
                 conn1Data.append(conn1ID)
                 conn1Data.append(pconn1move)
-                conn1Data.append(pconn1Result)
+                conn1Data.append(pconn1result)
                 conn1Data.append(conn1Move)
                 conn1Data.append(1)
                 conn1Data.append(round)
-                dbmconn1.moveInsert(conn1Data)
+                dbmconn1.move_Insert(conn1Data)
                 conn2Data.append(conn2ID)
                 conn2Data.append(pconn2move)
-                conn2Data.append(pconn2Result)
+                conn2Data.append(pconn2result)
                 conn2Data.append(conn2Move)
                 conn2Data.append(0)
                 conn2Data.append(round)
-                dbmconn2.moveInsert(conn2Data)
+                dbmconn2.move_Insert(conn2Data)
                 pconn1move = conn1Move
                 pconn2move = conn2Move
                 pconn1result = 1
@@ -142,18 +153,18 @@ class MultiplayerSession:
                 conn2.sendall("-1".encode('ascii'))
                 conn1Data.append(conn1ID)
                 conn1Data.append(pconn1move)
-                conn1Data.append(pconn1Result)
+                conn1Data.append(pconn1result)
                 conn1Data.append(conn1Move)
                 conn1Data.append(1)
                 conn1Data.append(round)
-                dbmconn1.moveInsert(conn1Data)
+                dbmconn1.move_Insert(conn1Data)
                 conn2Data.append(conn2ID)
                 conn2Data.append(pconn2move)
-                conn2Data.append(pconn2Result)
+                conn2Data.append(pconn2result)
                 conn2Data.append(conn2Move)
                 conn2Data.append(0)
                 conn2Data.append(round)
-                dbmconn2.moveInsert(conn2Data)
+                dbmconn2.move_Insert(conn2Data)
                 pconn1move = conn1Move
                 pconn2move = conn2Move
                 pconn1result = 1
@@ -164,18 +175,18 @@ class MultiplayerSession:
                 conn2.sendall("-1".encode('ascii'))
                 conn1Data.append(conn1ID)
                 conn1Data.append(pconn1move)
-                conn1Data.append(pconn1Result)
+                conn1Data.append(pconn1result)
                 conn1Data.append(conn1Move)
                 conn1Data.append(1)
                 conn1Data.append(round)
-                dbmconn1.moveInsert(conn1Data)
+                dbmconn1.move_Insert(conn1Data)
                 conn2Data.append(conn2ID)
                 conn2Data.append(pconn2move)
-                conn2Data.append(pconn2Result)
+                conn2Data.append(pconn2result)
                 conn2Data.append(conn2Move)
                 conn2Data.append(0)
                 conn2Data.append(round)
-                dbmconn2.moveInsert(conn2Data)
+                dbmconn2.move_Insert(conn2Data)
                 pconn1move = conn1Move
                 pconn2move = conn2Move
                 pconn1result = 1

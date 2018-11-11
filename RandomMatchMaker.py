@@ -1,4 +1,5 @@
 from Queue import myQueue
+from MultiplayerSession import MultiplayerSession
 import threading
 import time
 
@@ -14,5 +15,7 @@ class RandomMatchMaker(threading.Thread):
             if(self.socketQue.size() > 1):
                 playerOne = self.socketQue.removefromq()
                 playerTwo = self.socketQue.removefromq()
-                #launch multiplayer session passing in both sockets
+                multiplayerSession = MultiplayerSession(playerOne, playerTwo)
+                multiplayerSession.start()
+
             time.sleep(5)

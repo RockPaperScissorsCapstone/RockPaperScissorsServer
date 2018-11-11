@@ -1,4 +1,4 @@
-+#Session is currently implemented for best 2-of-3 game 
+#Session is currently implemented for best 2-of-3 game 
 #to be applied to dummy AI
 import socket
 from Queue import myQueue
