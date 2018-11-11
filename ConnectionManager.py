@@ -77,11 +77,11 @@ def main():
                 elif(function == "addFriend"):
                     APIcommand = api()
                     result = APICommand.addFriend(myQue)
-                    con.sendall(result.encode('ascii'))
+                    conn.sendall(result.encode('ascii'))
                 elif(function == "findFriends"):
                     APIcommand = api()
                     result = APIcommand.findFriends(myQue)
-                    con.sendall(result.encode('ascii'))
+                    conn.sendall(result.encode('ascii'))
                 else:
                     print("didn't match")
                     conn.sendall("not a matching function")
