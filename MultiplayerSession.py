@@ -182,5 +182,9 @@ class MultiplayerSession:
                 pconn2result = 0
                 conn1wins += 1
             round += 1
-        #conn1.sendall("2".encode('ascii')) Possible value to send after match end
-        #conn2.sendall("2".encode('ascii'))
+        if conn1wins == 2:
+            conn1.sendall("2".encode('ascii'))
+            conn2.sendall("-2".encode('ascii'))
+        else:
+            conn1.sendall("-2".encode('ascii'))
+            conn2.sendall("2".encode('ascii'))
