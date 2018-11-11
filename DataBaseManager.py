@@ -204,7 +204,7 @@ class DBManager:
             return err
     
     def findFriends(self, user_id):
-        query = ("SELECT Player_id FROM Friends WHERE Player2_id = %s UNION SELECT Player2_id FROM Friends WHERE Player_id = %s")
+        query = ("SELECT player_usernmae FROM friends WHERE player2_username = %s UNION SELECT player2_username FROM friends WHERE player_username = %s")
         inHouse = []
         inHouse.append(user_id[0])
         inHouse.append(user_id[0])
