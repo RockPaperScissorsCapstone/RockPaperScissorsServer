@@ -190,7 +190,7 @@ class DBManager:
             return err
     
     def addFriend(self, twofriends):
-        query = ("INSERT INTO Friends (Player_id, Player2_id) VALUES (%s, %s)")
+        query = ("INSERT INTO friends (player_username, player2_username) VALUES (%s, %s)")
         cursor = self.cnx.cursor(buffered = True)
         try:
             cursor.execute(query, twofriends)
