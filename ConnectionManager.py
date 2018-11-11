@@ -80,7 +80,7 @@ def main():
                     conn.sendall(result.encode('ascii'))
                 elif(function == "findFriends"):
                     APIcommand = api()
-                    result = APIcommand.findFriends(myQue)
+                    result = APICommand.findFriends(myQue)
                     conn.sendall(result.encode('ascii'))
                 else:
                     print("didn't match")
