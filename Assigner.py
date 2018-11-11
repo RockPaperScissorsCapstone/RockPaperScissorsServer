@@ -70,6 +70,14 @@ class Assigner(threading.Thread):
                 self.conn.sendall(result.encode('ascii'))
             elif(function == "PlayWithRandom"):
                 self.socketQue.addtoq(self.conn)
+            elif(function == "addFriend"):
+                APIcommand = api()
+                result = APICommand.addFriend(myQue)
+                self.conn.sendall(result.encode('ascii'))
+            elif(function == "findFriends"):
+                APIcommand = api()
+                result = APIcommand.findFriends(myQue)
+                self.conn.sendall(result.encode('ascii'))
             else:
                 print("didn't match")
                 self.conn.sendall("not a matching function")
