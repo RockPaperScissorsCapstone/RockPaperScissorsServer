@@ -6,9 +6,10 @@ from Queue import myQueue
 
 class Assigner(threading.Thread):
 
-    def __init__(self, connect):
+    def __init__(self, connect, socketQue):
         threading.Thread.__init__(self)
         self.conn = connect
+        self.socketQue = socketQue
         #run = threading.Thread(target=self,args=())
         print("Started thread")
         #run.start()
@@ -67,6 +68,8 @@ class Assigner(threading.Thread):
                 result = APICommand.UpdateWinLoss(myQue)
                 print("result: " + result)
                 self.conn.sendall(result.encode('ascii'))
+            elif(function == "PlayWithRandom"):
+                self.socketQue.addtoq(self.conn)
             else:
                 print("didn't match")
                 self.conn.sendall("not a matching function")

@@ -36,6 +36,6 @@ class ConnectionManager(threading.Thread):
                 conn, addr = s.accept()
                 #worker = threading.Thread(target=Assigner, args=(conn,))
                 worker = Assigner(conn)
-                threads.append(worker)
+                threads.append(worker, self.socketQue)
                 print("Starting worker")
                 worker.start()
