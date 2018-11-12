@@ -1,9 +1,9 @@
 import socket
 from Queue import myQueue
 from API import api
-
+    
 # Production Host
-HOST = '172.31.47.99'
+HOST = '172.31.36.15'
 
 # Nicks Test Host
 # HOST = '172.31.20.135'
@@ -85,8 +85,13 @@ def main():
                 elif(function == "Leaderboard"):
                     APICommand = api()
                     result = APICommand.Leaderboard(myQue)
-                    print("result: " + result)
-                    conn.sendall(result.encode('ascii'))
+                    resultString = ""
+                    for x in range(len(result)):
+                        resultString += result[x][0]
+                        resultString += ","+ str(result[x][1])
+                        resultString += ";"
+                    print(resultString)
+                    conn.sendall(resultString.encode('ascii'))
                 else:
                     print("didn't match")
                     conn.sendall("not a matching function")

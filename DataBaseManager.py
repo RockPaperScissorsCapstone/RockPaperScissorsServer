@@ -217,11 +217,11 @@ class DBManager:
         finally:
             cursor.close()
         
-    def leaderboard(self, param):
+    def leaderboard(self):
         query = ("SELECT rps_user_username, rps_user_score FROM rps_user ORDER BY rps_user_score")
         cursor = self.cnx.cursor(buffered=True)
         try:
-            cursor.execute(query, param)
+            cursor.execute(query)
             #Places all rows of query into 'result'
             result = cursor.fetchall()
             return result

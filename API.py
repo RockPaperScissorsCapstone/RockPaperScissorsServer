@@ -69,4 +69,4 @@ class api:
         
     def Leaderboard(self, que):
         dbm = DBManager()
-        return dbm.leaderboard
+        return dbm.leaderboard()
