@@ -190,7 +190,7 @@ class DBManager:
             return err
     
     def addFriend(self, twofriends):
-        query = ("INSERT INTO Friends (Player_id, Player2_id) VALUES (%s, %s)")
+        query = ("INSERT INTO friends (player_username, player2_username) VALUES (%s, %s)")
         cursor = self.cnx.cursor(buffered = True)
         try:
             cursor.execute(query, twofriends)
@@ -203,26 +203,32 @@ class DBManager:
             self.cnx.close()
             return err
     
-    def findFriends(self, user_id):
-        query = ("SELECT Player_id FROM Friends WHERE Player2_id = %s UNION SELECT Player2_id FROM Friends WHERE Player_id = %s")
+    def findFriends(self, username):
+        query = ("SELECT player_username FROM friends WHERE player2_username = %s UNION SELECT player2_username FROM friends WHERE player_username = %s")
         inHouse = []
-        inHouse.append(user_id[0])
-        inHouse.append(user_id[0])
+        inHouse.append(username)
+        inHouse.append(username)
         cursor = self.cnx.cursor()
+        print("Entering try")
         try:
             cursor.execute(query, inHouse)
             sqlretval = cursor.fetchall()
             cursor.close()
             self.cnx.close()
+            print(sqlretval)
             holdretval = ()
             for x in sqlretval:
+                print(x)
                 holdretval = holdretval + x
             retval = ""
             for x in holdretval:
+                print(x)
                 retval = retval + x
                 retval = retval + ","
+            print(len(retval))
             return retval
         except mysql.connector.Error as err:
             cursor.close()
             self.cnx.close()
+            print(err)
             return err

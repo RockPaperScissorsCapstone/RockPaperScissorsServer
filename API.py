@@ -64,13 +64,13 @@ class api:
         return dbm.updateWinLoss(param)
     
     def addFriend(self, que):
-        userID1 = self.Decoded(que.removefromq())
-        userID2 = self.Decoded(que.removefromq())
-        twofriends = [userID1, userID2]
+        username1 = self.Decoded(que.removefromq())
+        username2 = self.Decoded(que.removefromq())
+        twofriends = [username1, username2]
         dbm = DBManager()
         return dbm.addFriend(twofriends)
     
     def findFriends(self, que):
-        userID = self.Decoded(que.removefromq())
+        username = self.Decoded(que.removefromq())
         dbm = DBManager()
-        return dbm.findFriends(userID)
+        return dbm.findFriends(username)

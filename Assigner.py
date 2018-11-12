@@ -84,12 +84,12 @@ class Assigner(threading.Thread):
                         time.sleep(1)
 
             elif(function == "addFriend"):
-                APIcommand = api()
+                APICommand = api()
                 result = APICommand.addFriend(myQue)
-                self.conn.sendall(result.encode('ascii'))
+                self.conn.sendall(str(result).encode('ascii'))
             elif(function == "findFriends"):
-                APIcommand = api()
-                result = APIcommand.findFriends(myQue)
+                APICommand = api()
+                result = APICommand.findFriends(myQue)
                 self.conn.sendall(result.encode('ascii'))
             else:
                 print("didn't match")
