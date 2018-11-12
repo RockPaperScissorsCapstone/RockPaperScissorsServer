@@ -2,15 +2,18 @@ from API import api
 import socket
 import threading
 from Queue import myQueue
+from Messenger import Messenger
+import time
 
 
 class Assigner(threading.Thread):
 
-    def __init__(self, connect, socketQue, addr):
+    def __init__(self, connect, socketQue, addr, messages):
         threading.Thread.__init__(self)
         self.conn = connect
         self.socketQue = socketQue
         self.addr = addr
+        self.messages = messages
         #run = threading.Thread(target=self,args=())
         print("Started thread")
         #run.start()
@@ -70,7 +73,16 @@ class Assigner(threading.Thread):
                 print("result: " + result)
                 self.conn.sendall(result.encode('ascii'))
             elif(function == "PlayWithRandom"):
-                self.socketQue.addtoq(self.addr)
+                package = (self.conn, self.addr)
+                self.socketQue.addtoq(package)
+                while True:
+                    messageList = self.messages.getList()
+                    if self.addr[0] in messageList:
+                        self.messages.removeFromList(self.addr[0])
+                        break
+                    else:
+                        time.sleep(1)
+
             elif(function == "addFriend"):
                 APIcommand = api()
                 result = APICommand.addFriend(myQue)

@@ -6,12 +6,18 @@ class MultiplayerSession(threading.Thread):
 
     player1 = None
     player2 = None
+    player1Address = None
+    player2Address = None
+    messenger = None
 
-    def __init__(self, player1, player2):
+    def __init__(self, player1, player2, messenger):
         threading.Thread.__init__(self)
         print("Multiplayer started")
-        self.player1 = player1
-        self.player2 = player2
+        self.player1 = player1[0]
+        self.player2 = player2[0]
+        self.player1Address = player1[1]
+        self.player2Address = player2[1]
+        self.messenger = messenger
 
     def run(self):
         self.startMultiplayerSession(self.player1, self.player2)
@@ -19,6 +25,8 @@ class MultiplayerSession(threading.Thread):
     def startMultiplayerSession(self, conn1, conn2):
         conn1ID = int(conn1.recv(1024).decode('ascii'))
         conn2ID = int(conn2.recv(1024).decode('ascii'))
+        print(conn1ID)
+        print(conn2ID)
         conn1.sendall(str(conn2ID).encode('ascii'))
         conn2.sendall(str(conn1ID).encode('ascii'))
         conn1.sendall("1".encode('ascii'))
@@ -193,9 +201,16 @@ class MultiplayerSession(threading.Thread):
                 pconn2result = 0
                 conn1wins += 1
             round += 1
+            print(conn1wins)
+            print(conn2wins)
+            
         if conn1wins == 2:
             conn1.sendall("2".encode('ascii'))
             conn2.sendall("-2".encode('ascii'))
+            self.messenger.addIpAddress(self.player1Address[0])
+            self.messenger.addIpAddress(self.player2Address[0])
         else:
             conn1.sendall("-2".encode('ascii'))
             conn2.sendall("2".encode('ascii'))
+            self.messenger.addIpAddress(self.player1Address[0])
+            self.messenger.addIpAddress(self.player2Address[0])

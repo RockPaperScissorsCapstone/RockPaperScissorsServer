@@ -2,11 +2,13 @@ from ConnectionManager import ConnectionManager
 import threading
 from RandomMatchMaker import RandomMatchMaker
 from Queue import myQueue
+from Messenger import Messenger
 
 def main():
     socketQue = myQueue()
-    randomM = RandomMatchMaker(socketQue)
-    cManager = ConnectionManager(socketQue)
+    messenger = Messenger()
+    randomM = RandomMatchMaker(socketQue, messenger)
+    cManager = ConnectionManager(socketQue, messenger)
     randomM.start()
     cManager.start()
 
