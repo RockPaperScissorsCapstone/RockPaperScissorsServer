@@ -3,7 +3,7 @@ from Queue import myQueue
 from API import api
 
 # Production Host
-HOST = '172.31.47.99'
+HOST = '172.31.23.219'
 
 # Nicks Test Host
 # HOST = '172.31.20.135'
@@ -54,8 +54,8 @@ def main():
                     conn.sendall(result.encode('ascii'))
                 # Starts the login process
                 elif(function == "Login"):
-                    APIcommand = api()
-                    result = APIcommand.Login(myQue)
+                    APICommand = api()
+                    result = APICommand.Login(myQue)
                     print("result: " + result)
                     conn.send(result.encode(encoding='ascii'))
                 # Starts game with AI
@@ -63,7 +63,7 @@ def main():
                     APICommand = api()
                     result = APICommand.AI_fetch(myQue)
                     print("result: " + result)
-                    conn.sendall(result.encode(encoding='ascii'))
+                    conn.sendall(str(result).encode(encoding='ascii'))
                 # Starts session
                 elif(function == "Session"):
                     APICommand = api()
@@ -75,11 +75,11 @@ def main():
                     print("result: " + result)
                     conn.sendall(result.encode('ascii'))
                 elif(function == "addFriend"):
-                    APIcommand = api()
+                    APICommand = api()
                     result = APICommand.addFriend(myQue)
-                    conn.sendall(result.encode('ascii'))
+                    conn.sendall(str(result).encode('ascii'))
                 elif(function == "findFriends"):
-                    APIcommand = api()
+                    APICommand = api()
                     result = APICommand.findFriends(myQue)
                     conn.sendall(result.encode('ascii'))
                 else:
