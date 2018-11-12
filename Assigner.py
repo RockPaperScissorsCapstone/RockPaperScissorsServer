@@ -77,7 +77,7 @@ class Assigner(threading.Thread):
                 APICommand = api()
                 result = APICommand.UpdateScore(myQue)
                 print("result: " + result)
-                conn.sendall(result.encode('ascii'))
+                self.conn.sendall(result.encode('ascii'))
             # Retrieves leaderbord data
             elif(function == "Leaderboard"):
                 APICommand = api()
@@ -88,7 +88,7 @@ class Assigner(threading.Thread):
                     resultString += ","+ str(result[x][1])
                     resultString += ";"
                 print(resultString)
-                conn.sendall(resultString.encode('ascii'))
+                self.conn.sendall(resultString.encode('ascii'))
             elif(function == "PlayWithRandom"):
                 package = (self.conn, self.addr)
                 self.socketQue.addtoq(package)
