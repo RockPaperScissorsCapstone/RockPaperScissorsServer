@@ -1,5 +1,6 @@
 from Queue import myQueue
 from MultiplayerSession import MultiplayerSession
+import socket
 import threading
 import time
 
@@ -13,9 +14,27 @@ class RandomMatchMaker(threading.Thread):
         print("Running RandomMatchMaker")
         while True:
             if(self.socketQue.size() > 1):
-                playerOne = self.socketQue.removefromq()
-                playerTwo = self.socketQue.removefromq()
-                multiplayerSession = MultiplayerSession(playerOne, playerTwo)
-                multiplayerSession.start()
+                print("Match has been made")
+                playerOneAddr = self.socketQue.removefromq()
+                playerTwoAddr = self.socketQue.removefromq()
+
+                playerOne = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                playerTwo = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+                playerOneClientAddress = (playerOneAddr[0],65431)
+                playerTwoClientAddress = (playerTwoAddr[0],65431)
+
+                playerOne.connect(playerOneClientAddress)
+                playerTwo.connect(playerTwoClientAddress)
+
+                playerOne.sendall(("1").encode('ascii'))
+                playerTwo.sendall(("1").encode('ascii'))
+
+                playerOneConnected = playerOne.recv(1024)
+                playerTwoConnected = playerTwo.recv(1024)
+                
+                if(playerOneConnected.decode('ascii')=="1" & playerTwoConnected.decode('ascii')=="1"):
+                    multiplayerSession = MultiplayerSession(playerOne, playerTwo)
+                    multiplayerSession.start()
 
             time.sleep(5)

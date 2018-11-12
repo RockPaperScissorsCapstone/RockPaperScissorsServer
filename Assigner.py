@@ -6,10 +6,11 @@ from Queue import myQueue
 
 class Assigner(threading.Thread):
 
-    def __init__(self, connect, socketQue):
+    def __init__(self, connect, socketQue, addr):
         threading.Thread.__init__(self)
         self.conn = connect
         self.socketQue = socketQue
+        self.addr = addr
         #run = threading.Thread(target=self,args=())
         print("Started thread")
         #run.start()
@@ -69,7 +70,7 @@ class Assigner(threading.Thread):
                 print("result: " + result)
                 self.conn.sendall(result.encode('ascii'))
             elif(function == "PlayWithRandom"):
-                self.socketQue.addtoq(self.conn)
+                self.socketQue.addtoq(self.addr)
             elif(function == "addFriend"):
                 APIcommand = api()
                 result = APICommand.addFriend(myQue)
