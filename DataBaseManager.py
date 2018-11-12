@@ -189,6 +189,52 @@ class DBManager:
             self.cnx.close()
             return err
     
+    def updateScore(self, param):
+        winnerId = param[0] 
+        winnerScore = param[1] 
+        loserId = param[2]
+        loserScore = param[3]
+        scoreCalc = 10 #The score to be added/subtracted due to win/loss, before underdog bonus
+        #Checks if there is an 'underdog' and applies score bonus accordingly
+        if(loserScore - winnerScore >= 100): 
+            scoreCalc = scoreCalc + (winnerScore - loserScore)/10
+        query = ("UPDATE rps_user SET rps_user_score = %s WHERE rps_user_id = %s")
+        queryInfoWinner = [winnerScore + scoreCalc, winnerId]
+        queryInfoLoser = [loserScore - scoreCalc, loserId]
+        cursor = self.cnx.cursor(buffered=True)
+        try:
+            cursor.execute(query, queryInfoWinner)
+            cursor.execute(query, queryInfoLoser)
+            self.cnx.commit()
+            cursor.close()
+            self.cnx.close()
+            return "Updated Score!"
+        except mysql.connector.Error as err:
+            cursor.close()
+            self.cnx.close()
+            return err
+        finally:
+            cursor.close()
+
+    def leaderboard(self):
+        query = ("SELECT rps_user_username, rps_user_score FROM rps_user ORDER BY rps_user_score")
+        cursor = self.cnx.cursor(buffered=True)
+        try:
+            cursor.execute(query)
+            #Places all rows of query into 'result'
+            result = cursor.fetchall()
+            return result
+            #  Old code
+            #self.cnx.commit()
+            #cursor.close()
+            #self.cnx.close()
+        except mysql.connector.Error as err:
+            cursor.close()
+            self.cnx.close()
+            return err
+        finally:
+            cursor.close()
+    
     def addFriend(self, twofriends):
         query = ("INSERT INTO friends (player_username, player2_username) VALUES (%s, %s)")
         cursor = self.cnx.cursor(buffered = True)
