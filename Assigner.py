@@ -8,12 +8,13 @@ import time
 
 class Assigner(threading.Thread):
 
-    def __init__(self, connect, socketQue, addr, messages):
+    def __init__(self, connect, socketQue, addr, messages, statusQue):
         threading.Thread.__init__(self)
         self.conn = connect
         self.socketQue = socketQue
         self.addr = addr
         self.messages = messages
+        self.statusQue = statusQue
         #run = threading.Thread(target=self,args=())
         print("Started thread")
         #run.start()
@@ -52,6 +53,8 @@ class Assigner(threading.Thread):
                 self.conn.sendall(result.encode('ascii'))
             # Starts the login process
             elif(function == "Login"):
+                loginInformation = (self.addr[0], myQue.queue[1].decode('ascii')) #store ip address, and username
+                self.statusQue.addtoq(loginInformation)
                 APIcommand = api()
                 result = APIcommand.Login(myQue)
                 print("result: " + result)
@@ -108,6 +111,17 @@ class Assigner(threading.Thread):
                 APICommand = api()
                 result = APICommand.findFriends(myQue)
                 self.conn.sendall(result.encode('ascii'))
+            elif(function == "Logout"):
+                callingIP = self.addr[0]
+                print(self.addr[0])
+                callingUsername = myQue.queue[0].decode('ascii')
+                print(myQue.queue[0].decode('ascii'))
+                for loggedInUser in self.statusQue.queue:
+                    if (callingIP == loggedInUser[0] and callingUsername == loggedInUser[1]):
+                        print("Found the logoff user!")
+                        removedUser = self.statusQue.removeUserFromQueue(loggedInUser)
+                        print("Removed: ", removedUser)
+                self.conn.sendall("logged off".encode('ascii'))
             else:
                 print("didn't match")
                 self.conn.sendall("not a matching function")
