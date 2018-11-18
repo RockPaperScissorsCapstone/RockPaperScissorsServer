@@ -87,3 +87,10 @@ class api:
         username = self.Decoded(que.removefromq())
         dbm = DBManager()
         return dbm.findFriends(username)
+
+    def playWithFriend(self, que):
+        senderUsername = self.Decoded(que.removefromq())
+        recieverUsername = self.Decoded(que.removefromq())
+        dbm = DBManager()
+        #dbm playWithFriends() to put play request in message db
+        return dbm.playWithFriend(senderUsername, recieverUsername)
