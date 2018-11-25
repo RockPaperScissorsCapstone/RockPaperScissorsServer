@@ -150,11 +150,20 @@ class DBManager:
             self.cnx.commit()
             cursor.close()
             self.cnx.close()
-            if result1[0] > result2[0] and result1[0] > result3[0]:
+            if result1[0] > result2[0] and result1[0] > result3[0]:#rock most likely
                 return 2
-            elif result2[0] > result3[0] and result2[0] > result1[0]:
+            elif result2[0] > result3[0] and result2[0] > result1[0]:#paper most likely
                 return 3
-            else:
+            elif result3[0] > result2[0] and result3[0] > result1[0]:#scissors most likely
+                return 1
+            elif result1[0] == result2[0] and result2[0] == result3[0]:#all three equally likely, needs to be replaced with data mining when implemented
+                retval = randrange(1, 3)
+                return retval
+            elif result1[0] == result2[0]:#rock and paper equally likely
+                return 2
+            elif result2[0] == result3[0]:#paper and scissors equally likely
+                return 3
+            elif result3[0] == result1[0]:#scissors and rock equally likely
                 return 1
         except mysql.connector.Error as err:
             cursor.close()
