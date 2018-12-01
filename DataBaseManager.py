@@ -300,8 +300,9 @@ class DBManager:
             self.cnx.commit()
             cursor.close()
             self.cnx.close()
+            return "Challenge Made"
         except mysql.connector.Error as err:
             cursor.close()
             self.cnx.close()
             return err
-        return "Challenge Made"
+        
