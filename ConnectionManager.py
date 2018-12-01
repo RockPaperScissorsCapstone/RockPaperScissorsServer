@@ -7,7 +7,7 @@ from Assigner import Assigner
 
 class ConnectionManager(threading.Thread):
     # Production Host
-    HOST = '172.31.47.99'
+    HOST = '172.31.23.219'
 
     # Nicks Test Host
     # HOST = '172.31.20.135'
