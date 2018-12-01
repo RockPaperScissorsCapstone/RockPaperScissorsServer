@@ -304,5 +304,4 @@ class DBManager:
         except mysql.connector.Error as err:
             cursor.close()
             self.cnx.close()
-            return err
-        
+            return str(err)
