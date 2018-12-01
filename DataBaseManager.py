@@ -298,6 +298,7 @@ class DBManager:
             print(inHouse)
             cursor.execute(query1, inHouse)
             sqlretval = cursor.fetchone()
+            print(sqlretval)
             sqlretval = sqlretval[0]
             inHouse = [que[0], sqlretval, que[2]]
             cursor.execute(query2, inHouse)
