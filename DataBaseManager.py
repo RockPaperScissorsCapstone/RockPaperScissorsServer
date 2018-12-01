@@ -293,8 +293,9 @@ class DBManager:
         cursor = self.cnx.cursor()
         try:
             cursor.execute(query1, list(que[1]))
-            inHouse = [que[0], int(cursor.fetchone()[0]), que[2]]
-            cursor.execute(query2, inHouse)
+            sqlretval = cursor.fetchone()
+            sqlretval = sqlretval[0]
+            cursor.execute(query2, [que[0], sqlretval, que[2]])
             self.cnx.commit()
             cursor.close()
             self.cnx.close()
