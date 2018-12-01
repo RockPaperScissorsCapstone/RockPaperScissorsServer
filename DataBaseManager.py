@@ -288,7 +288,7 @@ class DBManager:
             print(err)
             return err
     def challenge(self, que):
-        #query1 = ("SELECT rps_user_username FROM rps_user WHERE rps_user_ID = %s")
+        query1 = ("SELECT rps_user_username FROM rps_user WHERE rps_user_ID = %s")
         print(que)
         query2 = ("INSERT INTO messages (sender_id, receiver_id, message_content) VALUES (%s, %s, %s)")
         cursor = self.cnx.cursor()
