@@ -288,14 +288,14 @@ class DBManager:
             print(err)
             return err
     def challenge(self, que):
-        query1 = ("SELECT rps_user_username FROM rps_user WHERE rps_user_ID = %s")
+        #query1 = ("SELECT rps_user_username FROM rps_user WHERE rps_user_ID = %s")
         query2 = ("INSERT INTO messages (sender_id, reciever_id, message_content) VALUES (%s, %s, %s)")
         cursor = self.cnx.cursor()
         try:
-            cursor.execute(query1, list(que[1]))
-            sqlretval = cursor.fetchone()
-            sqlretval = sqlretval[0]
-            cursor.execute(query2, [que[0], sqlretval, que[2]])
+            #cursor.execute(query1, list(que[1]))
+            #sqlretval = cursor.fetchone()
+            #sqlretval = sqlretval[0]
+            cursor.execute(query2, que)
             self.cnx.commit()
             cursor.close()
             self.cnx.close()
