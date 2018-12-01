@@ -293,10 +293,11 @@ class DBManager:
         query2 = ("INSERT INTO messages (sender_id, receiver_id, message_content) VALUES (%s, %s, %s)")
         cursor = self.cnx.cursor()
         try:
-            #cursor.execute(query1, list(que[1]))
-            #sqlretval = cursor.fetchone()
-            #sqlretval = sqlretval[0]
-            cursor.execute(query2, que)
+            cursor.execute(query1, list(que[1]))
+            sqlretval = cursor.fetchone()
+            sqlretval = sqlretval[0]
+            inHouse = [que[0], sqlretval, que[2]]
+            cursor.execute(query2, inHouse)
             self.cnx.commit()
             cursor.close()
             self.cnx.close()
