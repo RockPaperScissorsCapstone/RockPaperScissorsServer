@@ -108,6 +108,10 @@ class Assigner(threading.Thread):
                 APICommand = api()
                 result = APICommand.findFriends(myQue)
                 self.conn.sendall(result.encode('ascii'))
+            elif(function == "UpdateCurrency"):
+                APICommand = api()
+                result = APICommand.UpdateCurrency(myQue)
+                self.conn.sendall(str(result).encode('ascii'))
             else:
                 print("didn't match")
                 self.conn.sendall("not a matching function")

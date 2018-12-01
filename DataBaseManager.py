@@ -278,3 +278,31 @@ class DBManager:
             self.cnx.close()
             print(err)
             return err
+
+    def getUserScore(self, userid):
+        query = ("SELECT rps_user_score FROM rps_user WHERE rps_user_userid = %s", userid)
+        cursor = self.cnx.cursor()
+        try:
+            cursor.execute(query)
+            sqlretval = cursor.fetchall()
+            cursor.close()
+            self.cnx.close()
+            return sqlretval[0]
+        except mysql.connector.Error as err:
+            cursor.close()
+            self.cnx.close()
+            return err
+
+    def updateCurrency(self, userid, gain):
+        query = ("UPDATE rps_user SET rps_user_currency = rps_user_currency + %s WHERE rps_user_userid = %s", (gain, userid))
+        cursor = self.cnx.cursor()
+        try:
+            cursor.execute(query)
+            result = cursor.fetchall()
+            cursor.close()
+            self.cnx.close()
+            return "Updated Currency!"
+        except mysql.connector.Error as err:
+            cursor.close()
+            self.cnx.close()
+            return err
