@@ -87,3 +87,11 @@ class api:
         username = self.Decoded(que.removefromq())
         dbm = DBManager()
         return dbm.findFriends(username)
+    
+    def addMessage(self, que):
+        userID = self.Decoded(que.removefromq())
+        userName = self.Decoded(que.removefromq())
+        messageType = self.Decoded(que.removefromq())
+        if messageType == "Challenge Message":
+            dbm = DBManager()
+            return dbm.challenge([userID, userName, messageType])

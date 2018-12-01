@@ -99,7 +99,10 @@ class Assigner(threading.Thread):
                         break
                     else:
                         time.sleep(1)
-
+            elif(function == "addMessage"):
+                APICommand = api()
+                result = APICommand.addMessage(myQue)
+                self.conn.sendall(result)
             elif(function == "addFriend"):
                 APICommand = api()
                 result = APICommand.addFriend(myQue)
