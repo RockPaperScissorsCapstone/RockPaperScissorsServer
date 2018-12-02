@@ -314,7 +314,7 @@ class DBManager:
             return err
     def returnMessages(self, que):
         query1 = ("SELECT sender_id, message_content FROM messages WHERE receiver_id = %s")
-        query2 = ("SELECT rps_user_username FROM rps_user WHERE rps_user IN (%s)")
+        query2 = ("SELECT rps_user_username FROM rps_user WHERE rps_user_ID IN %s")
         cursor = self.cnx.cursor()
         try:
             cursor.execute(query1, que)
