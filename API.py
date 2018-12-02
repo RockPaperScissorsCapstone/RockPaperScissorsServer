@@ -94,3 +94,8 @@ class api:
         messageType = self.Decoded(que.removefromq())
         dbm = DBManager()
         return dbm.challenge([userID, userName, messageType])
+
+    def returnMessages(self, que):
+        userName = self.Decoded(que.removefromq())
+        dbm = DBManager()
+        return dbm.returnMessages([userName])
