@@ -314,7 +314,7 @@ class DBManager:
             return err
     def returnMessages(self, que):
         query1 = ("SELECT sender_id, message_content FROM messages WHERE receiver_id = %s")
-        query2 = ("SELECT rps_user_username FROM rps_user WHERE rps_user_ID IN %s")
+        query2 = ("SELECT rps_user_username FROM rps_user WHERE rps_user_ID IN (%s)")
         cursor = self.cnx.cursor()
         try:
             cursor.execute(query1, que)
@@ -322,6 +322,8 @@ class DBManager:
             inHouse = []
             for x in sqlretval:
                 inHouse.append(x[0])
+            in_p = ", ".join(map(lambda x: "%s", inHouse))
+            query2 = query2 % in_p
             cursor.execute(query2, inHouse)
             sqlretval2 = cursor.fetchall()
             retval = ""
