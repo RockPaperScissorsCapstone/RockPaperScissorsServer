@@ -9,14 +9,14 @@ class DBManager:
     def __init__(self):
         try:
             # Production Credentials
-            #self.cnx = mysql.connector.connect(user='rpsdb1', password='tekashi69',
-            #                     host='rpsdb1.cs0eeakwgvyu.us-east-2.rds.amazonaws.com',
-            #                      database='rpsdb1')
+            self.cnx = mysql.connector.connect(user='rpsdb1', password='tekashi69',
+                                host='rpsdb1.cs0eeakwgvyu.us-east-2.rds.amazonaws.com',
+                                 database='rpsdb1')
 
             #Nick's Test Credentials
-            self.cnx = mysql.connector.connect(user='rpsNick', password='Connection',
-                                  host='rpsdb1.cs0eeakwgvyu.us-east-2.rds.amazonaws.com',
-                                  database='rpsdbTest')
+            # self.cnx = mysql.connector.connect(user='rpsNick', password='Connection',
+            #                       host='rpsdb1.cs0eeakwgvyu.us-east-2.rds.amazonaws.com',
+            #                       database='rpsdbTest')
 
             print(self.cnx)
 
@@ -150,11 +150,20 @@ class DBManager:
             self.cnx.commit()
             cursor.close()
             self.cnx.close()
-            if result1[0] > result2[0] and result1[0] > result3[0]:
+            if result1[0] > result2[0] and result1[0] > result3[0]:#rock most likely
                 return 2
-            elif result2[0] > result3[0] and result2[0] > result1[0]:
+            elif result2[0] > result3[0] and result2[0] > result1[0]:#paper most likely
                 return 3
-            else:
+            elif result3[0] > result2[0] and result3[0] > result1[0]:#scissors most likely
+                return 1
+            elif result1[0] == result2[0] and result2[0] == result3[0]:#all three equally likely, needs to be replaced with data mining when implemented
+                retval = randrange(1, 3)
+                return retval
+            elif result1[0] == result2[0]:#rock and paper equally likely
+                return 2
+            elif result2[0] == result3[0]:#paper and scissors equally likely
+                return 3
+            elif result3[0] == result1[0]:#scissors and rock equally likely
                 return 1
         except mysql.connector.Error as err:
             cursor.close()
@@ -278,3 +287,89 @@ class DBManager:
             self.cnx.close()
             print(err)
             return err
+
+    def deleteMessage(self, que):
+        query1 = ("SELECT rps_user_ID FROM rps_user WHERE rps_user_username = %s")
+        query2 = ("DELETE FROM messages WHERE receiver_id = %s AND sender_id = %s AND message_content = %s")
+        cursor = self.cnx.cursor()
+        try:
+            inHouse = []
+            inHouse.append(que[1])
+            cursor.execute(query1, inHouse)
+            sqlretval = cursor.fetchone()
+            print(sqlretval)
+            sqlretval = sqlretval[0]
+            inHouse = [que[0],sqlretval, que[2]]
+            print(inHouse[1])
+            cursor.execute(query2, inHouse)
+            self.cnx.commit()
+            self.cnx.close()
+            cursor.close()
+            self.cnx.close()
+            return "Message Deleted"
+        except mysql.connector.Error as err:
+            cursor.close()
+            self.cnx.close()
+            err = str(err)
+            print(err)
+            return err
+
+    def challenge(self, que):
+        query1 = ("SELECT rps_user_ID FROM rps_user WHERE rps_user_username = %s")
+        print(que)
+        query2 = ("INSERT INTO messages (sender_id, receiver_id, message_content) VALUES (%s, %s, %s)")
+        cursor = self.cnx.cursor()
+        try:
+            inHouse = []
+            inHouse.append(que[1])
+            print(inHouse)
+            cursor.execute(query1, inHouse)
+            sqlretval = cursor.fetchone()
+            print(sqlretval)
+            sqlretval = sqlretval[0]
+            inHouse = [que[0], sqlretval, que[2]]
+            cursor.execute(query2, inHouse)
+            self.cnx.commit()
+            cursor.close()
+            self.cnx.close()
+            return "Challenge Made"
+        except mysql.connector.Error as err:
+            cursor.close()
+            self.cnx.close()
+            err = str(err)
+            print(err)
+            return err
+    def returnMessages(self, que):
+        query1 = ("SELECT sender_id, message_content FROM messages WHERE receiver_id = %s")
+        query2 = ("SELECT rps_user_username FROM rps_user WHERE rps_user_ID IN (%s)")
+        cursor = self.cnx.cursor()
+        try:
+            cursor.execute(query1, que)
+            sqlretval = cursor.fetchall()
+            inHouse = []
+            for x in sqlretval:
+                inHouse.append(x[0])
+            print(inHouse)
+            in_p = ", ".join(map(lambda x: "%s", inHouse))
+            query2 = query2 % in_p
+            cursor.execute(query2, inHouse)
+            sqlretval2 = cursor.fetchall()
+            retval = ""
+            counter = 0
+            while counter < len(sqlretval2):
+                retval += sqlretval2[counter][0]
+                retval += ","
+                retval += sqlretval[counter][1]
+                retval += ","
+                counter += 1
+            cursor.close()
+            self.cnx.close()
+            print(retval)
+            return retval
+        except mysql.connector.Error as err:
+            cursor.close()
+            self.cnx.close()
+            err = str(err)
+            print(err)
+            return err
+        return 0

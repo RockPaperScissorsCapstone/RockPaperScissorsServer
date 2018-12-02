@@ -94,3 +94,22 @@ class api:
         dbm = DBManager()
         #dbm playWithFriends() to put play request in message db
         return dbm.playWithFriend(senderUsername, recieverUsername)
+    
+    def addMessage(self, que):
+        userID = self.Decoded(que.removefromq())
+        userName = self.Decoded(que.removefromq())
+        messageType = self.Decoded(que.removefromq())
+        dbm = DBManager()
+        return dbm.challenge([userID, userName, messageType])
+    
+    def deleteMessage(self, que):
+        userID = self.Decoded(que.removefromq())
+        userName = self.Decoded(que.removefromq())
+        messageType = self.Decoded(que.removefromq())
+        dbm = DBManager()
+        return dbm.deleteMessage([userID, userName, messageType])
+        
+    def returnMessages(self, que):
+        userName = self.Decoded(que.removefromq())
+        dbm = DBManager()
+        return dbm.returnMessages([userName])

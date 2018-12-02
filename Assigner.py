@@ -99,7 +99,14 @@ class Assigner(threading.Thread):
                         break
                     else:
                         time.sleep(1)
-
+            elif(function == "addMessage"):
+                APICommand = api()
+                result = APICommand.addMessage(myQue)
+                self.conn.sendall(result.encode('ascii'))
+            elif(function == "returnMessages"):
+                APICommand = api()
+                result = APICommand.returnMessages(myQue)
+                self.conn.sendall(result.encode('ascii'))
             elif(function == "addFriend"):
                 APICommand = api()
                 result = APICommand.addFriend(myQue)
@@ -107,6 +114,10 @@ class Assigner(threading.Thread):
             elif(function == "findFriends"):
                 APICommand = api()
                 result = APICommand.findFriends(myQue)
+                self.conn.sendall(result.encode('ascii'))
+            elif(function == "deleteMessage"):
+                APICommand = api()
+                result = APICommand.deleteMessage(myQue)
                 self.conn.sendall(result.encode('ascii'))
             else:
                 print("didn't match")
