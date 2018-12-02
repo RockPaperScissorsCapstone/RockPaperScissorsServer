@@ -327,9 +327,9 @@ class DBManager:
             retval = ""
             counter = 0
             while counter < len(sqlretval2):
-                retval += sqlretval2[counter][1]
+                retval += sqlretval2[counter][0]
                 retval += ","
-                retval += sqlretval[counter][2]
+                retval += sqlretval[counter][1]
                 retval += ","
                 counter += 1
             cursor.close()
