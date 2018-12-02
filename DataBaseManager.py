@@ -236,7 +236,7 @@ class DBManager:
             cursor.close()
 
     def getInventory(self, userId):
-        query = ("SELECT purchase_skin_id FROM purchases WHERE purchase_user_id = $s")
+        query = ("SELECT purchase_skin_tag FROM purchases WHERE purchase_user_id = $s")
         cursor = self.cnx.cursor(buffered=True)
         try:
             cursor.execute(query, userId)
@@ -255,7 +255,7 @@ class DBManager:
             cursor.close()
 
     def shop(self):
-        query = ("SELECT skin_name, skin_price FROM skins ORDER BY skin_price")
+        query = ("SELECT skin_name, skin_tag, skin_price FROM skins ORDER BY skin_price")
         cursor = self.cnx.cursor(buffered=True)
         try:
             cursor.execute(query)
