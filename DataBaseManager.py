@@ -334,6 +334,7 @@ class DBManager:
                 counter += 1
             cursor.close()
             self.cnx.close()
+            print(retval)
             return retval
         except mysql.connector.Error as err:
             cursor.close()
