@@ -14,6 +14,7 @@ class session:
         aiWins = 0
         pmove = 4
         presult = 3
+        result = 2
         round = 1
 
         while (aiWins < 2 and playerWins < 2):
@@ -27,6 +28,7 @@ class session:
             
             aiMove = dbm.AI_fetch(AI_input)
             playerMove = int(playerMove)
+            print(playerMove)
             
             #
             #  AI IMPLEMENTATION HERE TO SELECT MOVE

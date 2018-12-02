@@ -3,6 +3,7 @@ import socket
 from mysql.connector import errorcode
 import array
 import json
+import random
 
 class DBManager:
     cnx = None
@@ -157,7 +158,7 @@ class DBManager:
             elif result3[0] > result2[0] and result3[0] > result1[0]:#scissors most likely
                 return 1
             elif result1[0] == result2[0] and result2[0] == result3[0]:#all three equally likely, needs to be replaced with data mining when implemented
-                retval = randrange(1, 3)
+                retval = random.randrange(1, 3)
                 return retval
             elif result1[0] == result2[0]:#rock and paper equally likely
                 return 2
