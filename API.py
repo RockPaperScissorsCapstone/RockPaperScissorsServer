@@ -36,11 +36,13 @@ class api:
         dbm = DBManager()
         param = [userName, userID]
         return dbm.updateAccountInfo(param)
-    
+	
     def Login(self, que):
         userName = self.Decoded(que.removefromq())
         password = self.Decoded(que.removefromq())
-        userInfo = [userName, password]
+		wins = self.Decoded(que.removefromq())
+		losses = self.Decoded(que.removefromq())
+        userInfo = [userName, password, wins, losses]
         dbm = DBManager()
         return dbm.Login(userInfo)
 
