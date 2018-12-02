@@ -327,14 +327,12 @@ class DBManager:
             query2 = query2 % in_p
             cursor.execute(query2, inHouse)
             sqlretval2 = cursor.fetchall()
-            retval = ""
+            retval = {}
             counter = 0
             while counter < len(sqlretval2):
-                retval += sqlretval2[counter][0]
-                retval += ","
-                retval += sqlretval[counter][1]
-                retval += ","
+                retval[sqlretval2[counter][0]] = sqlretval[counter][1]
                 counter += 1
+            retval = json.dumps(retval)
             cursor.close()
             self.cnx.close()
             print(retval)
