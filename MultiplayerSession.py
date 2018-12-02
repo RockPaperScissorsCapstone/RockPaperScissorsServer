@@ -48,6 +48,8 @@ class MultiplayerSession(threading.Thread):
             conn1Move = int(conn1.recv(1024))
             conn2Move = int(conn2.recv(1024))
             if conn1Move == conn2Move:
+                conn1.sendall(str(conn2Move).encode('ascii'))
+                conn2.sendall(str(conn1Move).encode('ascii'))
                 conn1.sendall("0".encode('ascii'))
                 conn2.sendall("0".encode('ascii'))
                 conn1Data.append(conn1ID)
@@ -69,6 +71,8 @@ class MultiplayerSession(threading.Thread):
                 pconn1result = 2
                 pconn2result = 2
             elif conn1Move == 1 and conn2Move == 2:
+                conn1.sendall(str(conn2Move).encode('ascii'))
+                conn2.sendall(str(conn1Move).encode('ascii'))
                 conn1.sendall("-1".encode('ascii'))
                 conn2.sendall("1".encode('ascii'))
                 conn1Data.append(conn1ID)
@@ -91,6 +95,8 @@ class MultiplayerSession(threading.Thread):
                 pconn2result = 1
                 conn2wins += 1
             elif conn1Move == 2 and conn2Move == 3:
+                conn1.sendall(str(conn2Move).encode('ascii'))
+                conn2.sendall(str(conn1Move).encode('ascii'))
                 conn1.sendall("-1".encode('ascii'))
                 conn2.sendall("1".encode('ascii'))
                 conn1Data.append(conn1ID)
@@ -113,6 +119,8 @@ class MultiplayerSession(threading.Thread):
                 pconn2result = 1
                 conn2wins += 1
             elif conn1Move == 3 and conn2Move == 1:
+                conn1.sendall(str(conn2Move).encode('ascii'))
+                conn2.sendall(str(conn1Move).encode('ascii'))
                 conn1.sendall("-1".encode('ascii'))
                 conn2.sendall("1".encode('ascii'))
                 conn1Data.append(conn1ID)
@@ -135,6 +143,8 @@ class MultiplayerSession(threading.Thread):
                 pconn2result = 1
                 conn2wins += 1
             elif conn1Move == 1 and conn2Move == 3:
+                conn1.sendall(str(conn2Move).encode('ascii'))
+                conn2.sendall(str(conn1Move).encode('ascii'))
                 conn1.sendall("1".encode('ascii'))
                 conn2.sendall("-1".encode('ascii'))
                 conn1Data.append(conn1ID)
@@ -157,6 +167,8 @@ class MultiplayerSession(threading.Thread):
                 pconn2result = 0
                 conn1wins += 1
             elif conn1Move == 2 and conn2Move == 1:
+                conn1.sendall(str(conn2Move).encode('ascii'))
+                conn2.sendall(str(conn1Move).encode('ascii'))
                 conn1.sendall("1".encode('ascii'))
                 conn2.sendall("-1".encode('ascii'))
                 conn1Data.append(conn1ID)
@@ -179,6 +191,8 @@ class MultiplayerSession(threading.Thread):
                 pconn2result = 0
                 conn1wins += 1
             elif conn1Move == 3 and conn2Move == 2:
+                conn1.sendall(str(conn2Move).encode('ascii'))
+                conn2.sendall(str(conn1Move).encode('ascii'))
                 conn1.sendall("1".encode('ascii'))
                 conn2.sendall("-1".encode('ascii'))
                 conn1Data.append(conn1ID)
