@@ -92,6 +92,5 @@ class api:
         userID = self.Decoded(que.removefromq())
         userName = self.Decoded(que.removefromq())
         messageType = self.Decoded(que.removefromq())
-        if messageType == "Challenge Message":
-            dbm = DBManager()
-            return dbm.challenge([userID, userName, messageType])
+        dbm = DBManager()
+        return dbm.challenge([userID, userName, messageType])
