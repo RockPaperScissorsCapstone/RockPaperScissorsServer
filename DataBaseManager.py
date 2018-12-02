@@ -287,6 +287,33 @@ class DBManager:
             self.cnx.close()
             print(err)
             return err
+
+    def deleteMessage(self, que):
+        query1 = ("SELECT rps_user_ID FROM rps_user WHERE rps_user_username = %s")
+        query2 = ("DELETE FROM messages WHERE receiver_id = %s AND sender_id = %s AND message_content = %s")
+        cursor = self.cnx.cursor()
+        try:
+            inHouse = []
+            inHouse.append(que[1])
+            cursor.execute(query1, inHouse)
+            sqlretval = cursor.fetchone()
+            print(sqlretval)
+            sqlretval = sqlretval[0]
+            inHouse = [que[0],sqlretval, que[2]]
+            print(inHouse[1])
+            cursor.execute(query2, inHouse)
+            self.cnx.commit()
+            self.cnx.close()
+            cursor.close()
+            self.cnx.close()
+            return "Message Deleted"
+        except mysql.connector.Error as err:
+            cursor.close()
+            self.cnx.close()
+            err = str(err)
+            print(err)
+            return err
+
     def challenge(self, que):
         query1 = ("SELECT rps_user_ID FROM rps_user WHERE rps_user_username = %s")
         print(que)

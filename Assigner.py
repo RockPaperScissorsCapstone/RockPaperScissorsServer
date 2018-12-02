@@ -115,6 +115,10 @@ class Assigner(threading.Thread):
                 APICommand = api()
                 result = APICommand.findFriends(myQue)
                 self.conn.sendall(result.encode('ascii'))
+            elif(function == "deleteMessage"):
+                APICommand = api()
+                result = APICommand.deleteMessage(myQue)
+                self.conn.sendall(result.encode('ascii'))
             else:
                 print("didn't match")
                 self.conn.sendall("not a matching function")
