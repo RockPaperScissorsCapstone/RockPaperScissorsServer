@@ -335,7 +335,6 @@ class DBManager:
                 retval += sqlretval[counter][1]
                 sqlretval += ","
                 counter += 1
-            retval = json.dumps(retval)
             cursor.close()
             self.cnx.close()
             print(retval)
