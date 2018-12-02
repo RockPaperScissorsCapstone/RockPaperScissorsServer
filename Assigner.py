@@ -103,6 +103,10 @@ class Assigner(threading.Thread):
                 APICommand = api()
                 result = APICommand.addMessage(myQue)
                 self.conn.sendall(result.encode('ascii'))
+            elif(function == "returnMessages"):
+                APICommand = api()
+                result = APICommand.returnMessages(myQue)
+                self.conn.sendall(result.encode('ascii'))
             elif(function == "addFriend"):
                 APICommand = api()
                 result = APICommand.addFriend(myQue)

@@ -312,3 +312,33 @@ class DBManager:
             err = str(err)
             print(err)
             return err
+    def returnMessages(self, que):
+        query1 = ("SELECT sender_id, message_content FROM messages WHERE receiver_id = %s")
+        query2 = ("SELECT rps_user_username FROM rps_user WHERE rps_user IN %s")
+        cursor = self.cnx.cursor()
+        try:
+            cursor.execute(query1, que)
+            sqlretval = cursor.fetchall()
+            inHouse = []
+            for x in sqlretval:
+                inHouse.append(x[0])
+            cursor.execute(query2, inHouse)
+            sqlretval2 = cursor.fetchall()
+            retval = ""
+            counter = 0
+            while counter < len(sqlretval2):
+                retval += sqlretval2[counter][1]
+                retval += ","
+                retval += sqlretval[counter][2]
+                retval += ","
+                counter += 1
+            cursor.close()
+            self.cnx.close()
+            return retval
+        except mysql.connector.Error as err:
+            cursor.close()
+            self.cnx.close()
+            err = str(err)
+            print(err)
+            return err
+        return 0
