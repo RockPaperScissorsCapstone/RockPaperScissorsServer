@@ -234,6 +234,44 @@ class DBManager:
             return err
         finally:
             cursor.close()
+
+    def getInventory(self, userId):
+        query = ("SELECT purchase_skin_id FROM purchases WHERE purchase_user_id = $s")
+        cursor = self.cnx.cursor(buffered=True)
+        try:
+            cursor.execute(query, userId)
+            #Places all rows of query into 'result'
+            result = cursor.fetchall()
+            return result
+            #  Old code
+            #self.cnx.commit()
+            #cursor.close()
+            #self.cnx.close()
+        except mysql.connector.Error as err:
+            cursor.close()
+            self.cnx.close()
+            return err
+        finally:
+            cursor.close()
+
+    def shop(self):
+        query = ("SELECT skin_name, skin_price FROM skins ORDER BY skin_price")
+        cursor = self.cnx.cursor(buffered=True)
+        try:
+            cursor.execute(query)
+            #Places all rows of query into 'result'
+            result = cursor.fetchall()
+            return result
+            #  Old code
+            #self.cnx.commit()
+            #cursor.close()
+            #self.cnx.close()
+        except mysql.connector.Error as err:
+            cursor.close()
+            self.cnx.close()
+            return err
+        finally:
+            cursor.close()
     
     def addFriend(self, twofriends):
         query = ("INSERT INTO friends (player_username, player2_username) VALUES (%s, %s)")

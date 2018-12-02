@@ -75,6 +75,15 @@ class api:
     def Leaderboard(self, que):
         dbm = DBManager()
         return dbm.leaderboard()
+
+    def Inventory(self, que):
+        userId = self.Decoded(que.removefromq())
+        dbm = DBManager()
+        return dbm.getInventory(userId)
+
+    def Shop(self, que):
+        dbm = DBManager()
+        return dbm.shop()
     
     def addFriend(self, que):
         username1 = self.Decoded(que.removefromq())

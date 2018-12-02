@@ -89,6 +89,25 @@ class Assigner(threading.Thread):
                     resultString += ";"
                 print(resultString)
                 self.conn.sendall(resultString.encode('ascii'))
+            elif(function == "Inventory"):
+                APICommand = api()
+                result = APICommand.Inventory(myQue)
+                resultString = ""
+                for x in range(len(result)):
+                    resultString += result[x][0]
+                    resultString += ";"
+                print(resultString)
+                self.conn.sendall(resultString.encode('ascii'))
+            elif(function == "Shop"):
+                APICommand = api()
+                result = APICommand.Shop(myQue)
+                resultString = ""
+                for x in range(len(result)):
+                    resultString += result[x][0]
+                    resultString += ","+ str(result[x][1])
+                    resultString += ";"
+                print(resultString)
+                self.conn.sendall(resultString.encode('ascii'))
             elif(function == "PlayWithRandom"):
                 package = (self.conn, self.addr)
                 self.socketQue.addtoq(package)
