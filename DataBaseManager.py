@@ -333,7 +333,7 @@ class DBManager:
                 retval += sqlretval2[counter][0]
                 retval += ","
                 retval += sqlretval[counter][1]
-                sqlretval += ","
+                retval += ","
                 counter += 1
             cursor.close()
             self.cnx.close()
