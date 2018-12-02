@@ -322,6 +322,7 @@ class DBManager:
             inHouse = []
             for x in sqlretval:
                 inHouse.append(x[0])
+            print(inHouse)
             in_p = ", ".join(map(lambda x: "%s", inHouse))
             query2 = query2 % in_p
             cursor.execute(query2, inHouse)
