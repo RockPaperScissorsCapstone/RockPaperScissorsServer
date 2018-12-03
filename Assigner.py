@@ -101,10 +101,12 @@ class Assigner(threading.Thread):
             elif(function == "Shop"):
                 APICommand = api()
                 result = APICommand.Shop(myQue)
+                print(result)
                 resultString = ""
                 for x in range(len(result)):
                     resultString += result[x][0]
                     resultString += ","+ str(result[x][1])
+                    resultString += ","+ str(result[x][2])
                     resultString += ";"
                 print(resultString)
                 self.conn.sendall(resultString.encode('ascii'))

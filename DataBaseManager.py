@@ -8,15 +8,15 @@ class DBManager:
     cnx = None
     def __init__(self):
         try:
-            # Production Credentials
-            #self.cnx = mysql.connector.connect(user='rpsdb1', password='tekashi69',
-            #                     host='rpsdb1.cs0eeakwgvyu.us-east-2.rds.amazonaws.com',
-            #                      database='rpsdb1')
+            #Production Credentials
+            self.cnx = mysql.connector.connect(user='rpsdb1', password='tekashi69',
+                                 host='rpsdb1.cs0eeakwgvyu.us-east-2.rds.amazonaws.com',
+                                  database='rpsdb1')
 
             #Nick's Test Credentials
-            self.cnx = mysql.connector.connect(user='rpsNick', password='Connection',
-                                  host='rpsdb1.cs0eeakwgvyu.us-east-2.rds.amazonaws.com',
-                                  database='rpsdbTest')
+            #self.cnx = mysql.connector.connect(user='rpsNick', password='Connection',
+            #                      host='rpsdb1.cs0eeakwgvyu.us-east-2.rds.amazonaws.com',
+            #                      database='rpsdbTest')
 
             print(self.cnx)
 
