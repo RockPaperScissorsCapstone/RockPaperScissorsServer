@@ -16,6 +16,9 @@ def main():
     pmove = 4
     result = 0
     counter = 0
+    wins = 0
+    losses = 0
+    ties = 0
     while counter < numbOfRuns:
         autoMove = listOfMoves[counter % len(listOfMoves)]
         dbm = DBManager()
@@ -27,7 +30,7 @@ def main():
             print("The script played %d and the AI played %d, the result is an AI victory" % (autoMove, aiMove))
             result = 0
         else:
-            print("The script played %d and the AI played %d, the result is a script victory" % (autoMove, aiMove))
+            print("The script played %d and the AI played %d, the result is an AI loss" % (autoMove, aiMove))
             result = 1
         moveInput = [19, pmove, presult, autoMove, result, counter]
         dbm2 = DBManager()
@@ -37,10 +40,16 @@ def main():
         counter += 1
         if result == 2:
             to_write = [counter, 0]
+            ties += 1
         elif result == 1:
             to_write = [counter, -1]
+            loses += 1
         else:
             to_write = [counter, 1]
+            wins += 1
         output_writer.writerow(to_write)
+    output_writer.writerow(["Wins", wins])
+    output_writer.writerow(["Loses", losses])
+    output_writer.writerow(["Ties", ties])
     output_file.close()
 main()
