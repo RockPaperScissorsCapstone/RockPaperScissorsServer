@@ -3,6 +3,7 @@ import socket
 from mysql.connector import errorcode
 import array
 import json
+import random
 
 
 class DBManager:
@@ -22,7 +23,7 @@ class DBManager:
             #                       host='rpsdb1.cs0eeakwgvyu.us-east-2.rds.amazonaws.com',
             #                       database='rpsdbTest')
 
-            print(self.cnx)
+            # print(self.cnx)
 
         except mysql.connector.Error as err:
             if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
@@ -174,9 +175,8 @@ class DBManager:
             elif result3[0] > result2[0] and result3[0] > result1[
                     0]:  #scissors most likely
                 return 1
-            elif result1[0] == result2[0] and result2[0] == result3[
-                    0]:  #all three equally likely, needs to be replaced with data mining when implemented
-                retval = randrange(1, 3)
+            elif result1[0] == result2[0] and result2[0] == result3[0]:#all three equally likely, needs to be replaced with data mining when implemented
+                retval = random.randrange(1, 3)
                 return retval
             elif result1[0] == result2[0]:  #rock and paper equally likely
                 return 2
@@ -468,3 +468,15 @@ class DBManager:
             err = str(err)
             print(err)
             return err
+    def autoMoveRemover(self):
+        query = "DELETE FROM move_history WHERE rps_user_id = 19"
+        cursor = self.cnx.cursor()
+        try:
+            cursor.execute(query)
+            self.cnx.commit()
+            cursor.close()
+            self.cnx.close()
+        except mysql.connector.Error as err:
+            cursor.close()
+            self.cnx.close()
+        return 0
