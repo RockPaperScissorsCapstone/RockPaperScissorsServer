@@ -322,7 +322,7 @@ class DBManager:
         query1 = (
             "SELECT rps_user_ID FROM rps_user WHERE rps_user_username = %s")
         query2 = (
-            "UPDATE messages WHERE receiver_id = %s AND sender_id = %s AND message_content = %s"
+            "DELETE FROM messages WHERE receiver_id = %s AND sender_id = %s AND message_content = %s"
         )
         cursor = self.cnx.cursor()
         try:
@@ -343,7 +343,7 @@ class DBManager:
         except mysql.connector.Error as err:
             cursor.close()
             self.cnx.close()
-            err = str(err)
+            err = str(err._full_msg)
             print(err)
             return err
 
@@ -377,11 +377,8 @@ class DBManager:
             return err
 
     def returnMessages(self, que):
-        query1 = (
-            "SELECT sender_id, message_content FROM messages WHERE receiver_id = %s"
-        )
-        query2 = (
-            "SELECT rps_user_username FROM rps_user WHERE rps_user_ID IN (%s)")
+        query1 = ("SELECT sender_id, message_content FROM messages WHERE receiver_id = %s")
+        query2 = ("SELECT rps_user_username FROM rps_user WHERE rps_user_ID IN (%s)")
         cursor = self.cnx.cursor()
         try:
             cursor.execute(query1, que)
@@ -415,11 +412,13 @@ class DBManager:
         return 0
 
     def getPlayerIDFromUserName(self, param):
-        query = (
-            "SELECT rps_user_ID FROM rps_user WHERE rps_user_username = %s")
+        print("We are in get player id")
+        print(param)
+        query = ("SELECT rps_user_ID FROM rps_user WHERE rps_user_username = %s")
         cursor = self.cnx.cursor()
         try:
-            cursor.execute(query, param)
+            userName = [param, ]
+            cursor.execute(query, userName)
             retval = cursor.fetchone()
             cursor.close()
             self.cnx.close()
