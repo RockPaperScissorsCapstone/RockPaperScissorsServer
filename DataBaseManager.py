@@ -347,3 +347,14 @@ class DBManager:
             print(err)
             return err
         return 0
+    def autoMoveRemover(self):
+        query = "DELETE FROM move_history WHERE rps_user_id = 19"
+        cursor = self.cnx.cursor()
+        try:
+            cursor.execute(query)
+            cursor.commit()
+            cursor.close()
+            self.cnx.close()
+        except:
+            cursor.close()
+            self.cnx.close()

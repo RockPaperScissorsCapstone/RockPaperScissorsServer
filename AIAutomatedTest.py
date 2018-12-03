@@ -43,7 +43,7 @@ def main():
             ties += 1
         elif result == 1:
             to_write = [counter, -1]
-            loses += 1
+            losses += 1
         else:
             to_write = [counter, 1]
             wins += 1
@@ -51,5 +51,7 @@ def main():
     output_writer.writerow(["Wins", wins])
     output_writer.writerow(["Loses", losses])
     output_writer.writerow(["Ties", ties])
+    dbm3 = DBManager()
+    dbm3.autoMoveRemover()
     output_file.close()
 main()
