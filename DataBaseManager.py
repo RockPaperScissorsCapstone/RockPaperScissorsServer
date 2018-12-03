@@ -1,6 +1,7 @@
 import mysql.connector
 import socket
 from mysql.connector import errorcode
+from mysql.connector import pooling
 import array
 import json
 import random
@@ -8,11 +9,20 @@ import random
 
 class DBManager:
     cnx = None
+    cnxpool = None
 
     def __init__(self):
         try:
             # Production Credentials
             self.cnx = mysql.connector.connect(
+                user='rpsdb1',
+                password='tekashi69',
+                host='rpsdb1.cs0eeakwgvyu.us-east-2.rds.amazonaws.com',
+                database='rpsdb1')
+
+            self.cnxpool = mysql.connector.pooling.MySQLConnectionPool(
+                pool_name = "rpspool",
+                pool_size = 3,
                 user='rpsdb1',
                 password='tekashi69',
                 host='rpsdb1.cs0eeakwgvyu.us-east-2.rds.amazonaws.com',
@@ -479,7 +489,7 @@ class DBManager:
         return 0
     def getUserScore(self, userid):
         query = ("SELECT rps_user_score FROM rps_user WHERE rps_user_userid = %s", userid)
-        cursor = self.cnx.cursor()
+        cursor = self.cnx.cursor(buffered=True)
         try:
             print("getUserScore executing")
             cursor.execute(query)
@@ -492,24 +502,79 @@ class DBManager:
             cursor.close()
             self.cnx.close()
             return err
-
-    def updateCurrency(self, userid, gain):
-        query = ("UPDATE rps_user SET rps_user_currency = rps_user_currency + %s WHERE rps_user_userid = %s", (gain, userid))
-        cursor = self.cnx.cursor()
+    
+    def updateCurrency(self, buf):
+        winnerScoreQuery = ("SELECT rps_user_score FROM rps_user WHERE rps_user_id = %s")
+        loserScoreQuery = ("SELECT rps_user_score FROM rps_user WHERE rps_user_id = %s")
+        cnx1 = self.cnxpool.get_connection()
+        # cursor = self.cnx.cursor(buffered=True)
+        cursor = cnx1.cursor(buffered=True)
         try:
-            cursor.execute(query)
-            result = cursor.fetchall()
+            print("updateCurrency executing")
+            print("buf[0]: ", buf[0])
+            buf0 = (buf[0], )
+            cursor.execute(winnerScoreQuery, buf0)
+            print("winnerScoreQuery executed")
+
+            print("winnerScoreQuery cursor fetch start")
+            winnerScore = cursor.fetchall()
+            print("winnerScoreQuery cursor fetch end")
+            winnerScore = winnerScore[0]
+            buf1 = (buf[1], )
+            cursor.execute(loserScoreQuery, buf1)
+            loserScore = cursor.fetchall()
+            loserScore = loserScore[0]
+
+            print("Winner Score: ", str(winnerScore))
+            print("Loser Score: ", str(loserScore))
+
+            scoreDiff = abs(winnerScore[0] - loserScore[0])
+            print("Score difference: ", scoreDiff)
+
+            # score diff 100 and winner has less score. underdog win
+            if scoreDiff >= 100 and loserScore > winnerScore:
+                underdogUpdateCurrencyQuery = ("UPDATE rps_user SET rps_user_currency = rps_user_currency + 15 WHERE rps_user_id = %s")
+                cursor.execute(underdogUpdateCurrencyQuery, buf0)
+                # self.cnx.commit()
+                cnx1.commit()
+                # print("Updated Currency (Underdog) for userid: ", winnerid)
+            else:
+                regularUpdateCurrencyQuery = ("UPDATE rps_user SET rps_user_currency = rps_user_currency + 10 WHERE rps_user_id = %s")
+                cursor.execute(regularUpdateCurrencyQuery, buf0)
+                # self.cnx.commit()
+                cnx1.commit()
+                # print("Updated Currency for userid: ", winnerid)
+            
+            #return updated currency to winner
+            getCurrencyQuery = ("SELECT rps_user_currency FROM rps_user WHERE rps_user_id = %s")
+            cursor.execute(getCurrencyQuery, buf0)
+            updatedCurrency = cursor.fetchall()
+            print("Updated Currency: ", str(updatedCurrency[0]))
             cursor.close()
-            self.cnx.close()
-            return "Updated Currency!"
+            cnx1.close()
+            return str(updatedCurrency[0][0])
         except mysql.connector.Error as err:
             cursor.close()
             self.cnx.close()
             return err
+
+    # def updateCurrency(self, userid, gain):
+    #     query = ("UPDATE rps_user SET rps_user_currency = rps_user_currency + %s WHERE rps_user_userid = %s", (gain, userid))
+    #     cursor = self.cnx.cursor(buffered=True)
+    #     try:
+    #         cursor.execute(query)
+    #         result = cursor.fetchall()
+    #         cursor.close()
+    #         self.cnx.close()
+    #         return "Updated Currency!"
+    #     except mysql.connector.Error as err:
+    #         cursor.close()
+    #         self.cnx.close()
+    #         return err
     
     def getCurrency(self, userid):
         query = ("SELECT rps_user_currency FROM rps_user WHERE rps_user_userid = %s", userid)
-        cursor = self.cnx.cursor()
+        cursor = self.cnx.cursor(buffered=True)
         try:
             cursor.execute(query)
             result = cursor.fetchall()

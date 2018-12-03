@@ -82,11 +82,10 @@ class session:
             print("Player Win: " + str(playerWins))
             print("AI Win: " + str(aiWins))
             if (playerWins < 2 and aiWins < 2):
+                print("Keep going!")
                 conn.sendall("2".encode('ascii'))
                 conn.sendall(str(playerWins).encode('ascii'))
                 conn.sendall(str(aiWins).encode('ascii'))
-                
-            
             print("send another move!")
 
             #print("Player move: " + playerMove ". AI move: " + aiMove)

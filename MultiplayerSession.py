@@ -203,14 +203,26 @@ class MultiplayerSession(threading.Thread):
             round += 1
             print(conn1wins)
             print(conn2wins)
-            
+
+        dbmCurrency = DBManager()    
         if conn1wins == 2:
             conn1.sendall("2".encode('ascii'))
             conn2.sendall("-2".encode('ascii'))
+            print(conn1ID)
+            print(conn2ID)
+            buffer = []
+            buffer.append(conn1ID)
+            buffer.append(conn2ID)
+            updatedConn1Currency = dbmCurrency.updateCurrency(buffer)
+            print(updatedConn1Currency)
+            conn1.sendall(updatedConn1Currency.encode('ascii'))
             self.messenger.addIpAddress(self.player1Address[0])
             self.messenger.addIpAddress(self.player2Address[0])
         else:
             conn1.sendall("-2".encode('ascii'))
             conn2.sendall("2".encode('ascii'))
+            updatedConn2Currency = dbmCurrency.updateCurrency(str(conn2ID), str(conn1ID))
+            print(updatedConn2Currency)
+            conn2.sendall(updatedConn2Currency.encode('ascii'))
             self.messenger.addIpAddress(self.player1Address[0])
             self.messenger.addIpAddress(self.player2Address[0])
