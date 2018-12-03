@@ -19,7 +19,7 @@ class DBManager:
                                   host='rpsdb1.cs0eeakwgvyu.us-east-2.rds.amazonaws.com',
                                   database='rpsdbTest')
 
-            print(self.cnx)
+            # print(self.cnx)
 
         except mysql.connector.Error as err:
             if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
