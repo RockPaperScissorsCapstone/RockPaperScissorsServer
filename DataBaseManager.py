@@ -355,6 +355,6 @@ class DBManager:
             cursor.commit()
             cursor.close()
             self.cnx.close()
-        except:
+        except mysql.connector.Error as err:
             cursor.close()
             self.cnx.close()
