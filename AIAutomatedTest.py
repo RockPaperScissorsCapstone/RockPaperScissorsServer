@@ -1,8 +1,8 @@
 from DataBaseManager import DBManager
 import csv
 def main():
-    autoCycle = int(input("Enter a string of moves without spaces"))
-    numbOfRuns = int(input("Enter the number of games to play"))
+    autoCycle = int(input("Enter a string of moves without spaces: "))
+    numbOfRuns = int(input("Enter the number of games to play: "))
     listOfMoves = []
     output_file = open("output.csv", "w", newline="")
     output_writer = csv.writer(output_file)
