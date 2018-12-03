@@ -27,7 +27,7 @@ def main():
             print("The script played %d and the AI played %d, the result is an AI victory" % (autoMove, aiMove))
             result = 0
         else:
-            print("The script played %d and the AI played %d, the result is a script victory"% (autoMove, aiMove))
+            print("The script played %d and the AI played %d, the result is a script victory" % (autoMove, aiMove))
             result = 1
         moveInput = [19, pmove, presult, autoMove, result, counter]
         dbm2 = DBManager()
