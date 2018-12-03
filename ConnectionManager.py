@@ -11,7 +11,7 @@ class ConnectionManager(threading.Thread):
     # HOST = '172.31.36.15'
 
     # Nicks Test Host
-    HOST = '172.31.20.135'
+    # HOST = '172.31.20.135'
     PORT = 65432
     socketQue = None
 
