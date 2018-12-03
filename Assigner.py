@@ -101,8 +101,18 @@ class Assigner(threading.Thread):
                         time.sleep(1)
             elif(function == "addMessage"):
                 APICommand = api()
-                result = APICommand.addMessage(myQue)
-                self.conn.sendall(result.encode('ascii'))
+                package = (self.conn, self.addr)
+                result = APICommand.addMessage(myQue, self.messages, package)
+                if(result == "wait"):
+                    while True:
+                        messageList = self.messages.getList()
+                        if self.addr[0] in messageList:
+                            self.messages.removeFromList(self.addr[0])
+                            break
+                        else:
+                            time.sleep(1)
+                else:
+                    self.conn.sendall(result.encode('ascii'))
             elif(function == "returnMessages"):
                 APICommand = api()
                 result = APICommand.returnMessages(myQue)
