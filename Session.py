@@ -79,7 +79,6 @@ class session:
             print("AI Win: " + str(aiWins))
             if (playerWins < 2 and aiWins < 2):
                 conn.sendall("2".encode('ascii'))
-                conn.sendall(str(aiMove).encode('ascii'))
                 conn.sendall(str(playerWins).encode('ascii'))
                 conn.sendall(str(aiWins).encode('ascii'))
                 
