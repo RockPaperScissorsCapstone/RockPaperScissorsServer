@@ -352,9 +352,10 @@ class DBManager:
         cursor = self.cnx.cursor()
         try:
             cursor.execute(query)
-            cursor.commit()
+            self.cnx.commit()
             cursor.close()
             self.cnx.close()
         except mysql.connector.Error as err:
             cursor.close()
             self.cnx.close()
+        return 0
