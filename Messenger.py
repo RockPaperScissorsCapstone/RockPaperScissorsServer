@@ -1,5 +1,6 @@
 class Messenger:
     ipAddress = [""]
+    friendChallenge = [("hi",("start","winning"))]
 
     def __init__(self):
         print("messenger is running")
@@ -12,3 +13,12 @@ class Messenger:
 
     def removeFromList(self, param):
         self.ipAddress.remove(param)
+
+    def challengeMade(self, param):
+        self.friendChallenge.append(param)
+
+    def getChallengeList(self):
+        return self.friendChallenge
+    
+    def removeFromChallengeList(self, param):
+        self.friendChallenge.remove(param)

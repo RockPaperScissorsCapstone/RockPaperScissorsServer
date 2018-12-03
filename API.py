@@ -1,5 +1,6 @@
 from Queue import myQueue
 from DataBaseManager import DBManager
+from MultiplayerSession import MultiplayerSession
 from Session import session
 import socket
 
@@ -96,3 +97,50 @@ class api:
         username = self.Decoded(que.removefromq())
         dbm = DBManager()
         return dbm.findFriends(username)
+    
+    def addMessage(self, que, messenger, playerPackage):
+        userID = self.Decoded(que.removefromq())
+        userName = self.Decoded(que.removefromq())
+        messageType = self.Decoded(que.removefromq())
+        dbm = DBManager()
+        if(messageType == "Challenge Accepted"):
+            success = ""
+            cUserID = dbm.getPlayerIDFromUserName(userName)
+            challenges = messenger.getChallengeList()
+            for challenge in challenges:
+                if(challenge[0] == cUserID):
+                    success = "wait"
+                    playerOne = challenge[1][0]
+                    playerTwo = playerPackage[0]
+                    playerOne.sendall(("1").encode('ascii'))
+                    playerTwo.sendall(("Finished").encode('ascii'))
+                    playerTwo.sendall(("1").encode('ascii'))
+
+                    playerOneConnected = playerOne.recv(1024)
+                    playerTwoConnected = playerTwo.recv(1024)
+
+                    if(playerOneConnected.decode('ascii')=="1" and playerTwoConnected.decode('ascii')=="1"):
+                        multiplayerSession = MultiplayerSession(challenge[1], playerPackage, messenger)
+                        multiplayerSession.start()
+                    break
+                success = "0"
+            return(success)
+        elif(messageType == "Challenge Message"):
+            challengePackage = (userID, playerPackage)
+            messenger.challengeMade(challengePackage)
+            result = dbm.challenge([userID, userName, messageType])
+            playerPackage[0].sendall("Finished".encode('ascii'))
+            return "wait"
+        return result
+    
+    def deleteMessage(self, que):
+        userID = self.Decoded(que.removefromq())
+        userName = self.Decoded(que.removefromq())
+        messageType = self.Decoded(que.removefromq())
+        dbm = DBManager()
+        return dbm.deleteMessage([userID, userName, messageType])
+        
+    def returnMessages(self, que):
+        userName = self.Decoded(que.removefromq())
+        dbm = DBManager()
+        return dbm.returnMessages([userName])

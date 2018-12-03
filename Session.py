@@ -34,116 +34,47 @@ class session:
             #Player Input invalid (Timeout, etc)
             if(playerMove == 0): 
                 aiWins += 1
-                round += 1
             #Player and AI Play same move, round doesn't count
             elif(playerMove == aiMove):
-                dbm = DBManager()
                 result = 2
-                move_Input = []
-                move_Input.append(pID)
-                move_Input.append(pmove)
-                move_Input.append(presult)
-                move_Input.append(playerMove)
-                move_Input.append(result)
-                move_Input.append(round)
-                dbm.move_Insert(move_Input)
-                pmove = playerMove
-                presult = result
                 round += 1
             elif(playerMove == 1 and aiMove == 2): #Player: rock, AI: paper
-                dbm = DBManager()
                 aiWins += 1
                 result = 0
-                move_Input = []
-                move_Input.append(pID)
-                move_Input.append(pmove)
-                move_Input.append(presult)
-                move_Input.append(playerMove)
-                move_Input.append(result)
-                move_Input.append(round)
-                dbm.move_Insert(move_Input)
-                pmove = playerMove
-                presult = result
                 round += 1
             elif(playerMove == 1 and aiMove == 3): #Player: rock, AI: Scissors
-                dbm = DBManager()
                 playerWins += 1
                 result = 1
-                move_Input = []
-                move_Input.append(pID)
-                move_Input.append(pmove)
-                move_Input.append(presult)
-                move_Input.append(playerMove)
-                move_Input.append(result)
-                move_Input.append(round)
-                dbm.move_Insert(move_Input)
-                pmove = playerMove
-                presult = result
                 round += 1
             elif(playerMove == 2 and aiMove == 1): #Player: Paper, AI: Rock
-                dbm = DBManager()
                 playerWins += 1
                 result = 1
-                move_Input = []
-                move_Input.append(pID)
-                move_Input.append(pmove)
-                move_Input.append(presult)
-                move_Input.append(playerMove)
-                move_Input.append(result)
-                move_Input.append(round)
-                dbm.move_Insert(move_Input)
-                pmove = playerMove
-                presult = result
                 round += 1
             elif(playerMove == 2 and aiMove == 3): #Player: Paper, AI: Scissors
-                dbm = DBManager()
                 aiWins += 1
                 result = 0
-                move_Input = []
-                move_Input.append(pID)
-                move_Input.append(pmove)
-                move_Input.append(presult)
-                move_Input.append(playerMove)
-                move_Input.append(result)
-                move_Input.append(round)
-                dbm.move_Insert(move_Input)
-                pmove = playerMove
-                presult = result
                 round += 1
             elif(playerMove == 3 and aiMove == 1): #Player: Scissors, AI: Rock
-                dbm = DBManager()
                 aiWins += 1
                 result = 0
-                move_Input = []
-                move_Input.append(pID)
-                move_Input.append(pmove)
-                move_Input.append(presult)
-                move_Input.append(playerMove)
-                move_Input.append(result)
-                move_Input.append(round)
-                dbm.move_Insert(move_Input)
-                pmove = playerMove
-                presult = result
                 round += 1
             elif(playerMove == 3 and aiMove == 2): #Player: Scissors, AI: Paper
-                dbm = DBManager()
                 playerWins += 1
                 result = 1
-                move_Input = []
-                move_Input.append(pID)
-                move_Input.append(pmove)
-                move_Input.append(presult)
-                move_Input.append(playerMove)
-                move_Input.append(result)
-                move_Input.append(round)
-                dbm.move_Insert(move_Input)
-                pmove = playerMove
-                presult = result
                 round += 1
             else:
                 print("No Move Present")
-
-            
+            dbm = DBManager()
+            move_Input = []
+            move_Input.append(pID)
+            move_Input.append(pmove)
+            move_Input.append(presult)
+            move_Input.append(playerMove)
+            move_Input.append(result)
+            move_Input.append(round)
+            dbm.move_Insert(move_Input)
+            pmove = playerMove
+            presult = result
             print("Player Win: " + str(playerWins))
             print("AI Win: " + str(aiWins))
             if (playerWins < 2 and aiWins < 2):
