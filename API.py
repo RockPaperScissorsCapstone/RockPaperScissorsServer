@@ -152,14 +152,21 @@ class api:
         loserId = self.Decoded(que.removefromq())
         dbm = DBManager()
         winnerScore = dbm.getUserScore(winnerId)
-        print(winnerScore)
+        print("winner score: ", winnerScore)
+        dbm = DBManager()
         loserScore = dbm.getUserScore(loserId)
-        print(loserScore)
+        print("Loser score: ", loserScore)
         scoreDiff = abs(winnerScore - loserScore)
         print(scoreDiff)
         # score diff 100 and winner has less score. underdog win
         if scoreDiff >= 100 and loserScore > winnerScore:
-            return dbm.updateCurrency(winnerId, 15)
+            dbm = DBManager()
+            dbm.updateCurrency(winnerId, 15)
+            dbm = DBManager()
+            return dbm.getCurrency(winnerId)
         # regular gain of currency
         else:
-            return dbm.updateCurrency(winnerId, 10)
+            dbm = DBManager()
+            dbm.updateCurrency(winnerId, 10)
+            dbm = DBManager()
+            return dbm.getCurrency(winnerId)

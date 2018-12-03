@@ -174,7 +174,7 @@ class Assigner(threading.Thread):
                 self.conn.sendall("logged off".encode('ascii'))
             elif(function == "UpdateCurrency"):
                 APICommand = api()
-                result = APICommand.UpdateCurrency(myQue)
+                result = APICommand.updateCurrency(myQue)
                 self.conn.sendall(str(result).encode('ascii'))
             else:
                 print("didn't match")
