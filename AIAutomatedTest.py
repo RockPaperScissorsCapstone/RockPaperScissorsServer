@@ -24,10 +24,10 @@ def main():
             print("The script played %d and the AI played %d, the result is a draw" % (autoMove, aiMove))
             result = 2
         elif (autoMove == 1 and aiMove == 2) or (autoMove == 2 and aiMove == 3) or (autoMove == 3 and aiMove == 1):
-            print("The script played %d and the AI played %d, the result is an AI victory")
+            print("The script played %d and the AI played %d, the result is an AI victory" % (autoMove, aiMove))
             result = 0
         else:
-            print("The script played %d and the AI played %d, the result is a script victory")
+            print("The script played %d and the AI played %d, the result is a script victory"% (autoMove, aiMove))
             result = 1
         moveInput = [19, pmove, presult, autoMove, result, counter]
         dbm2 = DBManager()
