@@ -131,6 +131,8 @@ class api:
             result = dbm.challenge([userID, userName, messageType])
             playerPackage[0].sendall("Finished".encode('ascii'))
             return "wait"
+        else:
+            result = dbm.challenge([userID, userName, messageType])
         return result
     
     def deleteMessage(self, que):
