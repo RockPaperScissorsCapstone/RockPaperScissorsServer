@@ -12,6 +12,10 @@ class myQueue:
     def size(self):
         return len(self.queue)
 
+    def removeUserFromQueue(self, user):
+        pos = self.queue.index(user)
+        return self.queue.pop(pos)
+
     # Pop method to remove element
     def removefromq(self):
         if len(self.queue) > 0:
