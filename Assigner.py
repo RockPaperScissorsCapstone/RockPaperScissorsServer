@@ -111,6 +111,14 @@ class Assigner(threading.Thread):
                 APICommand = api()
                 result = APICommand.findFriends(myQue)
                 self.conn.sendall(result.encode('ascii'))
+            elif(function == "GetOnlineUsers"):
+                onlineUsersList = []
+                for loggedInUser in self.statusQue.queue:
+                    print(loggedInUser[1])
+                    onlineUsersList.append(loggedInUser[1])
+                print(onlineUsersList)
+                print(','.join(onlineUsersList))
+                self.conn.sendall(','.join(onlineUsersList).encode('ascii'))
             elif(function == "Logout"):
                 callingIP = self.addr[0]
                 print(self.addr[0])
