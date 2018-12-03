@@ -19,7 +19,7 @@ def main():
     while counter < numbOfRuns:
         autoMove = listOfMoves[counter % len(listOfMoves)]
         dbm = DBManager()
-        aiMove = dbm.AI_fetch([1, pmove, presult])
+        aiMove = dbm.AI_fetch([19, pmove, presult])
         if autoMove == aiMove:
             print("The script played %d and the AI played %d, the result is a draw" % (autoMove, aiMove))
             result = 2
@@ -29,7 +29,7 @@ def main():
         else:
             print("The script played %d and the AI played %d, the result is a script victory")
             result = 1
-        moveInput = [1, pmove, presult, autoMove, result, counter]
+        moveInput = [19, pmove, presult, autoMove, result, counter]
         dbm2 = DBManager()
         dbm2.move_Insert(moveInput)
         pmove = autoMove
