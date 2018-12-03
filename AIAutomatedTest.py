@@ -1,8 +1,8 @@
 from DataBaseManager import DBManager
 import csv
 def main():
-    autoCycle = int(raw_input("Enter a string of moves without spaces"))
-    numbOfRuns = int(raw_input("Enter the number of games to play"))
+    autoCycle = int(input("Enter a string of moves without spaces"))
+    numbOfRuns = int(input("Enter the number of games to play"))
     listOfMoves = []
     output_file = open("output.csv", "w", newline="")
     output_writer = csv.writer(output_file)
@@ -17,7 +17,7 @@ def main():
     result = 0
     counter = 0
     while counter < numbOfRuns:
-        autoMove = autoCycle[counter % len(autoCycle)]
+        autoMove = listOfMoves[counter % len(listOfMoves)]
         dbm = DBManager()
         aiMove = dbm.AIfetch([1, pmove, presult])
         if autoMove == aiMove:
