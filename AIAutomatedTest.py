@@ -19,18 +19,19 @@ def main():
     while counter < numbOfRuns:
         autoMove = listOfMoves[counter % len(listOfMoves)]
         dbm = DBManager()
-        aiMove = dbm.AIfetch([1, pmove, presult])
+        aiMove = dbm.AI_fetch([1, pmove, presult])
         if autoMove == aiMove:
             print("The script played %d and the AI played %d, the result is a draw" % (autoMove, aiMove))
             result = 2
-        elif (autMove == 1 and aiMove == 2) or (autoMove == 2 and aiMove == 3) or (autoMove == 3 and aiMove == 1):
+        elif (autoMove == 1 and aiMove == 2) or (autoMove == 2 and aiMove == 3) or (autoMove == 3 and aiMove == 1):
             print("The script played %d and the AI played %d, the result is an AI victory")
             result = 0
         else:
             print("The script played %d and the AI played %d, the result is a script victory")
             result = 1
         moveInput = [1, pmove, presult, autoMove, result, counter]
-        dbm.move_Insert(moveInput)
+        dbm2 = DBManager()
+        dbm2.move_Insert(moveInput)
         pmove = autoMove
         presult = result
         counter += 1
