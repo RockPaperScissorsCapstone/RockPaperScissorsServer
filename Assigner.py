@@ -172,8 +172,11 @@ class Assigner(threading.Thread):
                         removedUser = self.statusQue.removeUserFromQueue(loggedInUser)
                         print("Removed: ", removedUser)
                 self.conn.sendall("logged off".encode('ascii'))
+            elif(function == "UpdateCurrency"):
+                APICommand = api()
+                result = APICommand.UpdateCurrency(myQue)
+                self.conn.sendall(str(result).encode('ascii'))
             else:
                 print("didn't match")
-                self.conn.sendall("not a matching function")
+                self.conn.sendall("not a matching function".encode('ascii'))
         print("Connection Closed")
-

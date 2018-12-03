@@ -146,3 +146,20 @@ class api:
         userName = self.Decoded(que.removefromq())
         dbm = DBManager()
         return dbm.returnMessages([userName])
+
+    def updateCurrency(self, que):
+        winnerId = self.Decoded(que.removefromq())
+        loserId = self.Decoded(que.removefromq())
+        dbm = DBManager()
+        winnerScore = dbm.getUserScore(winnerId)
+        print(winnerScore)
+        loserScore = dbm.getUserScore(loserId)
+        print(loserScore)
+        scoreDiff = abs(winnerScore - loserScore)
+        print(scoreDiff)
+        # score diff 100 and winner has less score. underdog win
+        if scoreDiff >= 100 and loserScore > winnerScore:
+            return dbm.updateCurrency(winnerId, 15)
+        # regular gain of currency
+        else:
+            return dbm.updateCurrency(winnerId, 10)
