@@ -1,0 +1,7 @@
+
+*.pyc
+
+*.json
+./__pycache__/*
+.mypy_cache/*
+.mypy_cache/3.6/_importlib_modulespec.meta.json
