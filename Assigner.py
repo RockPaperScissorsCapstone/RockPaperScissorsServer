@@ -8,13 +8,14 @@ import time
 
 class Assigner(threading.Thread):
 
-    def __init__(self, connect, socketQue, addr, messages, statusQue):
+    def __init__(self, connect, socketQue, addr, messages, statusQue, DBC):
         threading.Thread.__init__(self)
         self.conn = connect
         self.socketQue = socketQue
         self.addr = addr
         self.messages = messages
         self.statusQue = statusQue
+        self.DBC = DBC
         #run = threading.Thread(target=self,args=())
         print("Started thread")
         #run.start()
@@ -39,15 +40,14 @@ class Assigner(threading.Thread):
             function = (myQue.removefromq()).decode('ascii')
             print("function = " + function)
             print("reached")
+            APICommand = api(self.DBC)
             # Starts the Create Account Process
             if(function == "CreateAccount"):
-                APICommand = api()
                 result = APICommand.CreateAccount(myQue)
                 print("result: " + result)
                 self.conn.sendall(result.encode(encoding='ascii'))
             # Starts the update Account process NEEDS TO BE REDONE OLD FUNCTION IS DEPRICATED
             elif(function == "UpdateAccountInfo"):
-                APICommand = api()
                 result = APICommand.UpdateAccountInfo(myQue)
                 print("result: " + result)
                 self.conn.sendall(result.encode('ascii'))
@@ -55,35 +55,29 @@ class Assigner(threading.Thread):
             elif(function == "Login"):
                 loginInformation = (self.addr[0], myQue.queue[1].decode('ascii')) #store ip address, and username
                 self.statusQue.addtoq(loginInformation)
-                APIcommand = api()
-                result = APIcommand.Login(myQue)
+                result = APICommand.Login(myQue)
                 print("result: " + result)
                 self.conn.send(result.encode(encoding='ascii'))
             # Starts game with AI
             elif(function == "AIGame"):
-                APICommand = api()
                 result = APICommand.AI_fetch(myQue)
                 print("result: " + result)
                 self.conn.sendall(str(result).encode(encoding='ascii'))
             # Starts session
             elif(function == "Session"):
-                APICommand = api()
                 result = APICommand.CreateSession(self.conn)
                 self.conn.sendall(result.encode(encoding='ascii'))
             elif(function == "UpdateWinLoss"):
-                APICommand = api()
                 result = APICommand.UpdateWinLoss(myQue)
                 print("result: " + result)
                 self.conn.sendall(result.encode('ascii'))
             # Updates winner and loser scores
             elif(function == "UpdateScore"):
-                APICommand = api()
                 result = APICommand.UpdateScore(myQue)
                 print("result: " + result)
                 self.conn.sendall(result.encode('ascii'))
             # Retrieves leaderbord data
             elif(function == "Leaderboard"):
-                APICommand = api()
                 result = APICommand.Leaderboard(myQue)
                 resultString = ""
                 for x in range(len(result)):
@@ -93,7 +87,6 @@ class Assigner(threading.Thread):
                 print(resultString)
                 self.conn.sendall(resultString.encode('ascii'))
             elif(function == "Inventory"):
-                APICommand = api()
                 result = APICommand.Inventory(myQue)
                 resultString = ""
                 for x in range(len(result)):
@@ -102,7 +95,6 @@ class Assigner(threading.Thread):
                 print(resultString)
                 self.conn.sendall(resultString.encode('ascii'))
             elif(function == "Shop"):
-                APICommand = api()
                 result = APICommand.Shop(myQue)
                 print(result)
                 resultString = ""
@@ -124,7 +116,6 @@ class Assigner(threading.Thread):
                     else:
                         time.sleep(1)
             elif(function == "addMessage"):
-                APICommand = api()
                 package = (self.conn, self.addr)
                 result = APICommand.addMessage(myQue, self.messages, package)
                 if(result == "wait"):
@@ -138,19 +129,15 @@ class Assigner(threading.Thread):
                 else:
                     self.conn.sendall(result.encode('ascii'))
             elif(function == "returnMessages"):
-                APICommand = api()
                 result = APICommand.returnMessages(myQue)
                 self.conn.sendall(result.encode('ascii'))
             elif(function == "addFriend"):
-                APICommand = api()
                 result = APICommand.addFriend(myQue)
                 self.conn.sendall(str(result).encode('ascii'))
             elif(function == "findFriends"):
-                APICommand = api()
                 result = APICommand.findFriends(myQue)
                 self.conn.sendall(result.encode('ascii'))
             elif(function == "deleteMessage"):
-                APICommand = api()
                 result = APICommand.deleteMessage(myQue)
                 self.conn.sendall(result.encode('ascii'))
             elif(function == "GetOnlineUsers"):
@@ -173,7 +160,6 @@ class Assigner(threading.Thread):
                         print("Removed: ", removedUser)
                 self.conn.sendall("logged off".encode('ascii'))
             elif(function == "UpdateCurrency"):
-                APICommand = api()
                 result = APICommand.updateCurrency(myQue)
                 self.conn.sendall(str(result).encode('ascii'))
             else:

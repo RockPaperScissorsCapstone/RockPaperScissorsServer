@@ -6,8 +6,8 @@ import socket
 
 class api:
 
-    def __init__(self):
-        hi = "hello"
+    def __init__(self, DBC):
+        self.dbm = DBManager(DBC)
 
     def Decoded(self, data):
         print(data)
@@ -27,33 +27,29 @@ class api:
         userPassword = self.Decoded(que.removefromq())
         print("password = " + userPassword)
         userInfo = [userName, userEmail, userPassword, userFirstName, userLastName]
-        dbm = DBManager()
-        return dbm.CreateAccount(userInfo)
+        return self.dbm.CreateAccount(userInfo)
 
     def UpdateAccountInfo(self, que):
         userID = self.Decoded(que.removefromq())
         userName = self.Decoded(que.removefromq())
-        dbm = DBManager()
         param = [userName, userID]
-        return dbm.updateAccountInfo(param)
+        return self.dbm.updateAccountInfo(param)
     
     def Login(self, que):
         userName = self.Decoded(que.removefromq())
         password = self.Decoded(que.removefromq())
         userInfo=[userName, password]
-        dbm = DBManager()
-        return dbm.Login(userInfo)
+        return self.dbm.Login(userInfo)
        
     def AI_fetch(self, que):#FOR TESTING PURPOSES ONLY
         userID = self.Decoded(que.removefromq())
         pmove = self.Decoded(que.removefromq())
         presult = self.Decoded(que.removefromq())
         moveInfo = [userID, pmove, presult]
-        dbm = DBManager()
-        return dbm.AI_fetch(moveInfo)
+        return self.dbm.AI_fetch(moveInfo)
         
     def CreateSession(self, conn):
-        apiSession = session() 
+        apiSession = session(self.dbm) 
         return apiSession.startSession(conn)
 
     def UpdateWinLoss(self, que):
@@ -63,52 +59,44 @@ class api:
         print("losses: ", losses)
         userID = self.Decoded(que.removefromq())
         print("id: ", userID)
-        dbm = DBManager()
         param = [wins, losses, userID]
-        return dbm.updateWinLoss(param)
+        return self.dbm.updateWinLoss(param)
 
     def UpdateScore(self, que):
         winnerId = self.Decoded(que.removefromq())
         winnerScore = self.Decoded(que.removefromq())
         loserId = self.Decoded(que.removefromq())
         loserScore = self.Decoded(que.removefromq())
-        dbm = DBManager()
         param = [winnerId, winnerScore, loserId, loserScore]
-        return dbm.updateScore(param)
+        return self.dbm.updateScore(param)
         
     def Leaderboard(self, que):
-        dbm = DBManager()
-        return dbm.leaderboard()
+        return self.dbm.leaderboard()
 
     def Inventory(self, que):
         userId = self.Decoded(que.removefromq())
-        dbm = DBManager()
-        return dbm.getInventory(userId)
+        return self.dbm.getInventory(userId)
 
     def Shop(self, que):
-        dbm = DBManager()
-        return dbm.shop()
+        return self.dbm.shop()
     
     def addFriend(self, que):
         username1 = self.Decoded(que.removefromq())
         username2 = self.Decoded(que.removefromq())
         twofriends = [username1, username2]
-        dbm = DBManager()
-        return dbm.addFriend(twofriends)
+        return self.dbm.addFriend(twofriends)
     
     def findFriends(self, que):
         username = self.Decoded(que.removefromq())
-        dbm = DBManager()
-        return dbm.findFriends(username)
+        return self.dbm.findFriends(username)
     
     def addMessage(self, que, messenger, playerPackage):
         userID = self.Decoded(que.removefromq())
         userName = self.Decoded(que.removefromq())
         messageType = self.Decoded(que.removefromq())
-        dbm = DBManager()
         if(messageType == "Challenge Accepted"):
             success = ""
-            cUserID = dbm.getPlayerIDFromUserName(userName)
+            cUserID = self.dbm.getPlayerIDFromUserName(userName)
             challenges = messenger.getChallengeList()
             for challenge in challenges:
                 if(challenge[0] == cUserID):
@@ -123,7 +111,7 @@ class api:
                     playerTwoConnected = playerTwo.recv(1024)
 
                     if(playerOneConnected.decode('ascii')=="1" and playerTwoConnected.decode('ascii')=="1"):
-                        multiplayerSession = MultiplayerSession(challenge[1], playerPackage, messenger)
+                        multiplayerSession = MultiplayerSession(challenge[1], playerPackage, messenger, self.dbm)
                         multiplayerSession.start()
                     break
                 success = "0"
@@ -131,27 +119,24 @@ class api:
         elif(messageType == "Challenge Message"):
             challengePackage = (userID, playerPackage)
             messenger.challengeMade(challengePackage)
-            result = dbm.challenge([userID, userName, messageType])
+            result = self.dbm.challenge([userID, userName, messageType])
             playerPackage[0].sendall("Finished".encode('ascii'))
             return "wait"
         else:
-            result = dbm.challenge([userID, userName, messageType])
+            result = self.dbm.challenge([userID, userName, messageType])
         return result
     
     def deleteMessage(self, que):
         userID = self.Decoded(que.removefromq())
         userName = self.Decoded(que.removefromq())
         messageType = self.Decoded(que.removefromq())
-        dbm = DBManager()
-        return dbm.deleteMessage([userID, userName, messageType])
+        return self.dbm.deleteMessage([userID, userName, messageType])
         
     def returnMessages(self, que):
         userName = self.Decoded(que.removefromq())
-        dbm = DBManager()
-        return dbm.returnMessages([userName])
+        return self.dbm.returnMessages([userName])
 
-    def updateCurrency(self, que):
-        winnerId = self.Decoded(que.removefromq())
-        loserId = self.Decoded(que.removefromq())
-        dbm = DBManager()
-        return dbm.updateCurrency(winnerId, loserId)
+    # def updateCurrency(self, que):
+    #     winnerId = self.Decoded(que.removefromq())
+    #     loserId = self.Decoded(que.removefromq())
+    #     return self.dbm.updateCurrency(winnerId, loserId)

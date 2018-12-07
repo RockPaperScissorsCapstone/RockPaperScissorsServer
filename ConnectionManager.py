@@ -15,11 +15,12 @@ class ConnectionManager(threading.Thread):
     PORT = 65432
     socketQue = None
 
-    def __init__(self, socketQue, statusQue, messenger):
+    def __init__(self, socketQue, statusQue, messenger, DBC):
         threading.Thread.__init__(self)
         self.socketQue = socketQue
         self.statusQue = statusQue
         self.messenger = messenger
+        self.DBC = DBC
 
 
     def run(self):
@@ -42,7 +43,7 @@ class ConnectionManager(threading.Thread):
                 print(addr[1])
                 print(conn)
                 #worker = threading.Thread(target=Assigner, args=(conn,))
-                worker = Assigner(conn, self.socketQue, addr, self.messenger, self.statusQue)
+                worker = Assigner(conn, self.socketQue, addr, self.messenger, self.statusQue, self.DBC)
                 threads.append(worker)
                 print("Starting worker")
                 worker.start()
