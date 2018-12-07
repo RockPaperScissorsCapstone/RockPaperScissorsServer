@@ -10,14 +10,14 @@ class DBManager:
     def __init__(self):
         try:
             # Production Credentials
-            self.cnx = mysql.connector.connect(user='rpsdb1', password='tekashi69',
-                                host='rpsdb1.cs0eeakwgvyu.us-east-2.rds.amazonaws.com',
-                                 database='rpsdb1')
+            #self.cnx = mysql.connector.connect(user='rpsdb1', password='tekashi69',
+            #                     host='rpsdb1.cs0eeakwgvyu.us-east-2.rds.amazonaws.com',
+            #                      database='rpsdb1')
 
             #Nick's Test Credentials
-            # self.cnx = mysql.connector.connect(user='rpsNick', password='Connection',
-            #                       host='rpsdb1.cs0eeakwgvyu.us-east-2.rds.amazonaws.com',
-            #                       database='rpsdbTest')
+            self.cnx = mysql.connector.connect(user='rpsNick', password='Connection',
+                                  host='rpsdb1.cs0eeakwgvyu.us-east-2.rds.amazonaws.com',
+                                  database='rpsdbTest')
 
             print(self.cnx)
 
@@ -49,11 +49,16 @@ class DBManager:
             self.cnx.commit()
             cursor.close()
             self.cnx.close()
-            return("1")
+            return("0")
         except mysql.connector.Error as err:
             cursor.close()
             self.cnx.close()
-            return err
+            print(str(err))
+            if("username" in str(err)):
+                return("1")
+            elif("email" in str(err)):
+                return("2")
+            return str(err)
 
     # Prepares and executes the select statement for the login function and returns all data
     # associated with the user account with whos password and username was matched.
@@ -77,44 +82,52 @@ class DBManager:
             rows = cursor.rowcount
             #Obtains the row information in form of tuple
             result = cursor.fetchone()
-            #Parses out the tuple into more understandable variables
-            user_id = str(result[0])
-            user_username = str(result[1])
-            user_email = str(result[2])
-            user_fname = str(result[3])
-            user_lname = str(result[4])
-            user_wins = str(result[5])
-            user_losses = str(result[6])
-            user_currency = str(result[7])
-            user_score = str(result[8])
-            #Packages the inforamtion into json format to be sent to client
-            accountInfo_json = {
-                "user_id" : user_id, 
-                "firstname" : user_fname, 
-                "lastname" : user_lname, 
-                "email" : user_email, 
-                "username" : user_username,
-                "wins" : user_wins, 
-                "losses" : user_losses, 
-                "currency" : user_currency, 
-                "score" : user_score
-                }
-            #Turns the json object into a string object
-            accountInfo_string = json.dumps(accountInfo_json)
+            if(rows == 1):
+                #Parses out the tuple into more understandable variables
+                user_id = str(result[0])
+                user_username = str(result[1])
+                user_email = str(result[2])
+                user_fname = str(result[3])
+                user_lname = str(result[4])
+                user_wins = str(result[5])
+                user_losses = str(result[6])
+                user_currency = str(result[7])
+                user_score = str(result[8])
+                #Packages the inforamtion into json format to be sent to client
+                accountInfo_json = {
+                    "user_id" : user_id, 
+                    "firstname" : user_fname, 
+                    "lastname" : user_lname, 
+                    "email" : user_email, 
+                    "username" : user_username,
+                    "wins" : user_wins, 
+                    "losses" : user_losses, 
+                    "currency" : user_currency, 
+                    "score" : user_score
+                    }
+                #Turns the json object into a string object
+                accountInfo_string = json.dumps(accountInfo_json)
 
-            cursor.close()
-            self.cnx.close()
+                cursor.close()
+                self.cnx.close()
+                return(accountInfo_string)
+            else:
+                cursor.close()
+                self.cnx.close()
+                return("Login Failure")
             # Will check to see if the login returned any information and then returns
             # said information as a string in json format
-            if rows == 1:
-                return (accountInfo_string)
-            else:
-                return ("Login Failure")
         except mysql.connector.Error as err:
-            print(err)
+            print(str(err))
             cursor.close()
             self.cnx.close()
-            return err
+            return str(err)
+        except TypeError as err:
+            print("Type Error: ")
+            print(str(err))
+            cursor.close()
+            self.cnx.close()
+            return "Invalid Username or Password"
     
     def updateAccountInfo(self, param):
         #print("param = " + param)
