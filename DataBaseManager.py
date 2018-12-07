@@ -139,6 +139,7 @@ class DBManager:
         print(move_Info)
         query1 = ("SELECT move_history_move FROM move_history WHERE rps_user_id = %s AND move_history_pMove = %s AND move_history_pResult = %s")
         cursor = self.cnx.cursor(buffered=True)
+        n = random.randrange(10,20)
         try:
             cursor.execute(query1, move_Info)
             result = cursor.fetchall()
@@ -148,8 +149,8 @@ class DBManager:
             result3 = 0
             for x in result:
                 retval.append(x[0])
-            if len(retval) > 10:
-                retval = retval[len(retval)-10:len(retval)]
+            if len(retval) > n:
+                retval = retval[len(retval)-n:len(retval)]
             for x in retval:
                 if x == 1:
                     result1 += 1
