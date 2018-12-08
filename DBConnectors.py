@@ -10,7 +10,8 @@ class DBConnectors:
         try:
             self.cnxpool = mysql.connector.pooling.MySQLConnectionPool(
                     pool_name = "rpspool",
-                    pool_size = 500,
+                    pool_size = 32,
+                    pool_reset_session= True,
                     user='rpsdb1',
                     password='tekashi69',
                     host='rpsdb1.cs0eeakwgvyu.us-east-2.rds.amazonaws.com',
