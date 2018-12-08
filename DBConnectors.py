@@ -25,8 +25,10 @@ class DBConnectors:
                 print(err)
 
     def releaseConenction(self, connection):
-        connection.close()
-        self.cnxpool.add_connection()
+        self.cnxpool.add_connection(connection)
 
     def getConnection(self):
         return self.cnxpool.get_connection()
+
+    def getCount(self):
+        return self.cnxpool.pool_size

@@ -16,6 +16,8 @@ class DBManager:
         try:
             self.DBCP = DBCP
             self.cnx = self.DBCP.getConnection()
+            print("DBCP Count: ")
+            print(self.DBCP.getCount())
             # Production Credentials
             # self.cnx = mysql.connector.connect(
             #     user='rpsdb1',
@@ -66,11 +68,11 @@ class DBManager:
             cursor.execute(add_user, userInfo)
             self.cnx.commit()
             cursor.close()
-            self.DBCP.releaseConenction(self.cnx)
+            self.closeConnection()
             return ("1")
         except mysql.connector.Error as err:
             cursor.close()
-            self.DBCP.releaseConenction(self.cnx)
+            self.closeConnection()
             return err
 
     # Prepares and executes the select statement for the login function and returns all data
@@ -123,7 +125,7 @@ class DBManager:
             accountInfo_string = json.dumps(accountInfo_json)
 
             cursor.close()
-            self.DBCP.releaseConenction(self.cnx)
+            self.closeConnection()
             # Will check to see if the login returned any information and then returns
             # said information as a string in json format
             if rows == 1:
@@ -133,7 +135,7 @@ class DBManager:
         except mysql.connector.Error as err:
             print(err)
             cursor.close()
-            self.DBCP.releaseConenction(self.cnx)
+            self.closeConnection()
             return err
 
     def updateAccountInfo(self, param):
@@ -147,13 +149,13 @@ class DBManager:
             #result = str(cursor.fetchone()[0])
             self.cnx.commit()
             cursor.close()
-            self.DBCP.releaseConenction(self.cnx)
+            self.closeConnection()
             #print("Returned value from db = ")
             #print(result)
             return "1"
         except mysql.connector.Error as err:
             cursor.close()
-            self.DBCP.releaseConenction(self.cnx)
+            self.closeConnection()
             #print(err)
             return err
 
@@ -178,7 +180,7 @@ class DBManager:
             result3 = cursor.fetchone()
             self.cnx.commit()
             cursor.close()
-            # self.DBCP.releaseConenction(self.cnx)
+            # self.closeConnection()
             if result1[0] > result2[0] and result1[0] > result3[0]:  #rock most likely
                 return 2
             elif result2[0] > result3[0] and result2[0] > result1[0]:  #paper most likely
@@ -196,7 +198,7 @@ class DBManager:
                 return 1
         except mysql.connector.Error as err:
             cursor.close()
-            self.DBCP.releaseConenction(self.cnx)
+            self.closeConnection()
             return str(err)
 
     def move_Insert(self, move_Info):
@@ -208,11 +210,11 @@ class DBManager:
             cursor.execute(query, move_Info)
             self.cnx.commit()
             cursor.close()
-            # self.DBCP.releaseConenction(self.cnx)
+            # self.closeConnection()
             return 1
         except mysql.connector.Error as err:
             cursor.close()
-            self.DBCP.releaseConenction(self.cnx)
+            self.closeConnection()
             return str(err)
 
     def updateWinLoss(self, param):
@@ -224,11 +226,11 @@ class DBManager:
             cursor.execute(query, param)
             self.cnx.commit()
             cursor.close()
-            self.DBCP.releaseConenction(self.cnx)
+            self.closeConnection()
             return "Updated Win and Loss!"
         except mysql.connector.Error as err:
             cursor.close()
-            self.DBCP.releaseConenction(self.cnx)
+            self.closeConnection()
             return err
 
     def updateScore(self, param):
@@ -250,11 +252,11 @@ class DBManager:
             cursor.execute(query, queryInfoLoser)
             self.cnx.commit()
             cursor.close()
-            self.DBCP.releaseConenction(self.cnx)
+            self.closeConnection()
             return "Updated Score!"
         except mysql.connector.Error as err:
             cursor.close()
-            self.DBCP.releaseConenction(self.cnx)
+            self.closeConnection()
             return err
         finally:
             cursor.close()
@@ -268,7 +270,7 @@ class DBManager:
             cursor.execute(query)
             #Places all rows of query into 'result'
             result = cursor.fetchall()
-            self.DBCP.releaseConenction(self.cnx)
+            self.closeConnection()
             return result
             #  Old code
             #self.cnx.commit()
@@ -276,7 +278,7 @@ class DBManager:
             #self.cnx.close()
         except mysql.connector.Error as err:
             cursor.close()
-            self.DBCP.releaseConenction(self.cnx)
+            self.closeConnection()
             return err
         finally:
             cursor.close()
@@ -288,7 +290,7 @@ class DBManager:
             cursor.execute(query, userId)
             #Places all rows of query into 'result'
             result = cursor.fetchall()
-            self.DBCP.releaseConenction(self.cnx)
+            self.closeConnection()
             return result
             #  Old code
             #self.cnx.commit()
@@ -296,7 +298,7 @@ class DBManager:
             #self.cnx.close()
         except mysql.connector.Error as err:
             cursor.close()
-            self.DBCP.releaseConenction(self.cnx)
+            self.closeConnection()
             return err
         finally:
             cursor.close()
@@ -308,7 +310,7 @@ class DBManager:
             cursor.execute(query)
             #Places all rows of query into 'result'
             result = cursor.fetchall()
-            self.DBCP.releaseConenction(self.cnx)
+            self.closeConnection()
             return result
             #  Old code
             #self.cnx.commit()
@@ -330,11 +332,11 @@ class DBManager:
             cursor.execute(query, twofriends)
             self.cnx.commit()
             cursor.close()
-            self.DBCP.releaseConenction(self.cnx)
+            self.closeConnection()
             return "1"
         except mysql.connector.Error as err:
             cursor.close()
-            self.DBCP.releaseConenction(self.cnx)
+            self.closeConnection()
             return err
 
     def findFriends(self, username):
@@ -350,7 +352,7 @@ class DBManager:
             cursor.execute(query, inHouse)
             sqlretval = cursor.fetchall()
             cursor.close()
-            self.DBCP.releaseConenction(self.cnx)
+            self.closeConnection()
             print(sqlretval)
             holdretval = ()
             for x in sqlretval:
@@ -365,7 +367,7 @@ class DBManager:
             return retval
         except mysql.connector.Error as err:
             cursor.close()
-            self.DBCP.releaseConenction(self.cnx)
+            self.closeConnection()
             print(err)
             return err
 
@@ -388,11 +390,11 @@ class DBManager:
             cursor.execute(query2, inHouse)
             self.cnx.commit()
             cursor.close()
-            self.DBCP.releaseConenction(self.cnx)
+            self.closeConnection()
             return "Message Deleted"
         except mysql.connector.Error as err:
             cursor.close()
-            self.DBCP.releaseConenction(self.cnx)
+            self.closeConnection()
             err = str(err._full_msg)
             print(err)
             return err
@@ -417,11 +419,11 @@ class DBManager:
             cursor.execute(query2, inHouse)
             self.cnx.commit()
             cursor.close()
-            self.DBCP.releaseConenction(self.cnx)
+            self.closeConnection()
             return "Challenge Made"
         except mysql.connector.Error as err:
             cursor.close()
-            self.DBCP.releaseConenction(self.cnx)
+            self.closeConnection()
             err = str(err)
             print(err)
             return err
@@ -450,12 +452,12 @@ class DBManager:
                 retval += ","
                 counter += 1
             cursor.close()
-            self.DBCP.releaseConenction(self.cnx)
+            self.closeConnection()
             print(retval)
             return retval
         except mysql.connector.Error as err:
             cursor.close()
-            self.DBCP.releaseConenction(self.cnx)
+            self.closeConnection()
             err = str(err)
             print(err)
             return err
@@ -471,12 +473,12 @@ class DBManager:
             cursor.execute(query, userName)
             retval = cursor.fetchone()
             cursor.close()
-            self.DBCP.releaseConenction(self.cnx)
+            self.closeConnection()
             print(retval[0])
             return str(retval[0])
         except mysql.connector.Error as err:
             cursor.close()
-            self.DBCP.releaseConenction(self.cnx)
+            self.closeConnection()
             err = str(err)
             print(err)
             return err
@@ -488,10 +490,10 @@ class DBManager:
             cursor.execute(query)
             self.cnx.commit()
             cursor.close()
-            self.DBCP.releaseConenction(self.cnx)
+            self.closeConnection()
         except mysql.connector.Error as err:
             cursor.close()
-            self.DBCP.releaseConenction(self.cnx)
+            self.closeConnection()
         return 0
 
     def getUserScore(self, userid):
@@ -502,12 +504,12 @@ class DBManager:
             cursor.execute(query)
             sqlretval = cursor.fetchall()
             cursor.close()
-            self.DBCP.releaseConenction(self.cnx)
+            self.closeConnection()
             print(str(sqlretval[0]))
             return str(sqlretval[0])
         except mysql.connector.Error as err:
             cursor.close()
-            self.DBCP.releaseConenction(self.cnx)
+            self.closeConnection()
             return err
     
     def updateCurrency(self, buf):
@@ -557,26 +559,26 @@ class DBManager:
             updatedCurrency = cursor.fetchall()
             print("Updated Currency: ", str(updatedCurrency[0]))
             cursor.close()
-            self.DBCP.releaseConenction(self.cnx)
+            self.closeConnection()
             return str(updatedCurrency[0][0])
         except mysql.connector.Error as err:
             cursor.close()
-            self.DBCP.releaseConenction(self.cnx)
-            return err
+            self.closeConnection()
+            return str(err)
 
-    # def updateCurrency(self, userid, gain):
-    #     query = ("UPDATE rps_user SET rps_user_currency = rps_user_currency + %s WHERE rps_user_userid = %s", (gain, userid))
-    #     cursor = self.cnx.cursor(buffered=True)
-    #     try:
-    #         cursor.execute(query)
-    #         result = cursor.fetchall()
-    #         cursor.close()
-    #         self.cnx.close()
-    #         return "Updated Currency!"
-    #     except mysql.connector.Error as err:
-    #         cursor.close()
-    #         self.cnx.close()
-    #         return err
+    def puchaseItem(self, userid, gain):
+        query = ("UPDATE rps_user SET rps_user_currency = rps_user_currency + %s WHERE rps_user_userid = %s", (gain, userid))
+        cursor = self.cnx.cursor(buffered=True)
+        try:
+            cursor.execute(query)
+            result = cursor.fetchall()
+            cursor.close()
+            self.closeConnection()
+            return "Updated Currency!"
+        except mysql.connector.Error as err:
+            cursor.close()
+            self.closeConnection()
+            return str(err)
     
     def getCurrency(self, userid):
         query = ("SELECT rps_user_currency FROM rps_user WHERE rps_user_userid = %s", userid)
@@ -585,13 +587,15 @@ class DBManager:
             cursor.execute(query)
             result = cursor.fetchall()
             cursor.close()
-            self.DBCP.releaseConenction(self.cnx)
+            self.closeConnection()
             print("updated currency: ", result[0])
             return str(result[0])
         except mysql.connector.Error as err:
             cursor.close()
-            self.DBCP.releaseConenction(self.cnx)
-            return err
+            self.closeConnection()
+            return str(err)
 
     def closeConnection(self):
         self.DBCP.releaseConenction(self.cnx)
+        print("DBCP Count after release")
+        print(self.DBCP.getCount())
