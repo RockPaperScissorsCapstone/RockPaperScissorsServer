@@ -136,7 +136,7 @@ class api:
         userName = self.Decoded(que.removefromq())
         return self.dbm.returnMessages([userName])
 
-    # def updateCurrency(self, que):
-    #     winnerId = self.Decoded(que.removefromq())
-    #     loserId = self.Decoded(que.removefromq())
-    #     return self.dbm.updateCurrency(winnerId, loserId)
+    def puchaseItem(self, que):
+        winnerId = self.Decoded(que.removefromq())
+        loserId = self.Decoded(que.removefromq())
+        return self.dbm.puchaseItem(winnerId, loserId)

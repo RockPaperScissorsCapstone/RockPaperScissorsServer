@@ -11,6 +11,7 @@ class DBConnectors:
             self.cnxpool = mysql.connector.pooling.MySQLConnectionPool(
                     pool_name = "rpspool",
                     pool_size = 32,
+                    pool_reset_session= True,
                     user='rpsdb1',
                     password='tekashi69',
                     host='rpsdb1.cs0eeakwgvyu.us-east-2.rds.amazonaws.com',
@@ -25,8 +26,10 @@ class DBConnectors:
                 print(err)
 
     def releaseConenction(self, connection):
-        connection.close()
-        self.cnxpool.add_connection()
+        self.cnxpool.add_connection(connection)
 
     def getConnection(self):
         return self.cnxpool.get_connection()
+
+    def getCount(self):
+        return self.cnxpool.pool_size
