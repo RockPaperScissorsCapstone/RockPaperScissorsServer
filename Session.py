@@ -29,8 +29,8 @@ class session:
             AI_input = [int(pID), int(pmove), int(presult)]
             
             aiMove = self.dbm.AI_fetch(AI_input)
-            if(str.isdigit(str(aiMove))):
-                return aiMove
+            if(not(str.isdigit(str(aiMove)))):
+                return str(aiMove)
             playerMove = int(playerMove)
 
             print(playerMove)
@@ -80,7 +80,7 @@ class session:
             move_Input.append(result)
             move_Input.append(round)
             dbmResponse = self.dbm.move_Insert(move_Input)
-            if(str.isdigit(str(dbmResponse))):
+            if(not(str.isdigit(str(dbmResponse)))):
                 return str(dbmResponse)
             pmove = playerMove
             presult = result

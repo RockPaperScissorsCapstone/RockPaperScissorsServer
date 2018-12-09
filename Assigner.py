@@ -66,7 +66,7 @@ class Assigner(threading.Thread):
             # Starts session
             elif(function == "Session"):
                 result = APICommand.CreateSession(self.conn)
-                self.conn.sendall(result.encode(encoding='ascii'))
+                self.conn.sendall(str(result).encode(encoding='ascii'))
             elif(function == "UpdateWinLoss"):
                 result = APICommand.UpdateWinLoss(myQue)
                 print("result: " + result)
