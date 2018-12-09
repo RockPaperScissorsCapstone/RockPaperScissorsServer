@@ -19,6 +19,7 @@ def main():
     wins = 0
     losses = 0
     ties = 0
+    output_writer.writerow(["Round", "Player Move", "AI move", "Result"])
     while counter < numbOfRuns:
         autoMove = listOfMoves[counter % len(listOfMoves)]
         dbm = DBManager()
@@ -39,13 +40,13 @@ def main():
         presult = result
         counter += 1
         if result == 2:
-            to_write = [counter, 0]
+            to_write = [counter, autoMove, aiMove, 0]
             ties += 1
         elif result == 1:
-            to_write = [counter, -1]
+            to_write = [counter, autoMove, aiMove, -1]
             losses += 1
         else:
-            to_write = [counter, 1]
+            to_write = [counter, autoMove, aiMove, 1]
             wins += 1
         output_writer.writerow(to_write)
     output_writer.writerow(["Wins", wins])
