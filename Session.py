@@ -3,9 +3,12 @@
 import socket
 from Queue import myQueue
 from DataBaseManager import DBManager
+import mysql.connector
+from mysql.connector import errorcode
 
 class session:
-    def __init__(self):
+    def __init__(self, dbm):
+        self.dbm = dbm
         print("Session started")
 
     def startSession(self, conn):
@@ -18,7 +21,6 @@ class session:
         round = 1
 
         while (aiWins < 2 and playerWins < 2):
-            dbm = DBManager()
             playerMove = 0
             pID = conn.recv(1024)
             playerMove = conn.recv(1024)
@@ -26,7 +28,9 @@ class session:
             playerMove = playerMove.decode('ascii')
             AI_input = [int(pID), int(pmove), int(presult)]
             
-            aiMove = dbm.AI_fetch(AI_input)
+            aiMove = self.dbm.AI_fetch(AI_input)
+            if(not(str.isdigit(str(aiMove)))):
+                return str(aiMove)
             playerMove = int(playerMove)
 
             print(playerMove)
@@ -68,7 +72,6 @@ class session:
                 round += 1
             else:
                 print("No Move Present")
-            dbm = DBManager()
             move_Input = []
             move_Input.append(pID)
             move_Input.append(pmove)
@@ -76,7 +79,9 @@ class session:
             move_Input.append(playerMove)
             move_Input.append(result)
             move_Input.append(round)
-            print(dbm.move_Insert(move_Input))
+            dbmResponse = self.dbm.move_Insert(move_Input)
+            if(not(str.isdigit(str(dbmResponse)))):
+                return str(dbmResponse)
             pmove = playerMove
             presult = result
             print("Player Win: " + str(playerWins))

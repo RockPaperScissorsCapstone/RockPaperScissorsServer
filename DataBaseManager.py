@@ -5,27 +5,30 @@ from mysql.connector import pooling
 import array
 import json
 import random
+from DBConnectors import DBConnectors
+import time
 
 class DBManager:
     cnx = None
     cnxpool = None
 
-    def __init__(self):
+    def __init__(self, DBCP):
         try:
+            self.DBCP = DBCP
             # Production Credentials
-            self.cnx = mysql.connector.connect(
-                user='rpsdb1',
-                password='tekashi69',
-                host='rpsdb1.cs0eeakwgvyu.us-east-2.rds.amazonaws.com',
-                database='rpsdb1')
+            # self.cnx = mysql.connector.connect(
+            #     user='rpsdb1',
+            #     password='tekashi69',
+            #     host='rpsdb1.cs0eeakwgvyu.us-east-2.rds.amazonaws.com',
+            #     database='rpsdb1')
 
-            self.cnxpool = mysql.connector.pooling.MySQLConnectionPool(
-                pool_name = "rpspool",
-                pool_size = 3,
-                user='rpsdb1',
-                password='tekashi69',
-                host='rpsdb1.cs0eeakwgvyu.us-east-2.rds.amazonaws.com',
-                database='rpsdb1')
+            # self.cnxpool = mysql.connector.pooling.MySQLConnectionPool(
+            #     pool_name = "rpspool",
+            #     pool_size = 3,
+            #     user='rpsdb1',
+            #     password='tekashi69',
+            #     host='rpsdb1.cs0eeakwgvyu.us-east-2.rds.amazonaws.com',
+            #     database='rpsdb1')
 
             #Nick's Test Credentials
             # self.cnx = mysql.connector.connect(user='rpsNick', password='Connection',
@@ -58,21 +61,20 @@ class DBManager:
             "(rps_user_username, rps_user_email, rps_user_password, rps_user_fname, rps_user_lname) "
             "VALUES (%s, %s, %s, %s, %s)")
         try:
+            self.connect()
             cursor = self.cnx.cursor()
             cursor.execute(add_user, userInfo)
             self.cnx.commit()
-            cursor.close()
-            self.cnx.close()
             return("0")
         except mysql.connector.Error as err:
-            cursor.close()
-            self.cnx.close()
             print(str(err))
             if("username" in str(err)):
                 return("1")
             elif("email" in str(err)):
                 return("2")
-            return str(err)
+        finally:
+            cursor.close()
+            self.closeConnection()
 
     # Prepares and executes the select statement for the login function and returns all data
     # associated with the user account with whos password and username was matched.
@@ -92,8 +94,9 @@ class DBManager:
         login = (
             "SELECT rps_user_id, rps_user_username, rps_user_email, rps_user_fname, rps_user_lname, rps_user_wins, rps_user_losses, rps_user_currency, rps_user_score FROM rps_user WHERE rps_user_username = %s AND rps_user_password = %s"
         )
-        cursor = self.cnx.cursor(buffered=True)
         try:
+            self.connect()
+            cursor = self.cnx.cursor(buffered=True)
             cursor.execute(login, userInfo)
             rows = cursor.rowcount
             #Obtains the row information in form of tuple
@@ -123,48 +126,42 @@ class DBManager:
                     }
                 #Turns the json object into a string object
                 accountInfo_string = json.dumps(accountInfo_json)
-
-                cursor.close()
-                self.cnx.close()
                 return(accountInfo_string)
             else:
-                cursor.close()
-                self.cnx.close()
                 return("Login Failure")
             # Will check to see if the login returned any information and then returns
             # said information as a string in json format
         except mysql.connector.Error as err:
             print(str(err))
-            cursor.close()
-            self.cnx.close()
             return str(err)
         except TypeError as err:
             print("Type Error: ")
             print(str(err))
-            cursor.close()
-            self.cnx.close()
             return "Invalid Username or Password"
-    
+        finally:
+            cursor.close()
+            self.closeConnection()
+
     def updateAccountInfo(self, param):
         #print("param = " + param)
         get_account = (
             "UPDATE rps_user SET rps_user_username = %s WHERE rps_user_id = %s"
-        )
-        cursor = self.cnx.cursor(buffered=True)
+        )      
         try:
+            self.connect()
+            cursor = self.cnx.cursor(buffered=True)
             cursor.execute(get_account, param)
             #result = str(cursor.fetchone()[0])
             self.cnx.commit()
-            cursor.close()
-            self.cnx.close()
             #print("Returned value from db = ")
             #print(result)
             return "1"
         except mysql.connector.Error as err:
-            cursor.close()
-            self.cnx.close()
             #print(err)
-            return err
+            return str(err)
+        finally:
+            cursor.close()
+            self.closeConnection()
 
     def AI_fetch(self, move_Info):
         print(move_Info)
@@ -172,6 +169,8 @@ class DBManager:
         cursor = self.cnx.cursor(buffered=True)
         n = random.randrange(10,20)
         try:
+            self.connect()
+            cursor = self.cnx.cursor(buffered=True)
             cursor.execute(query1, move_Info)
             result = cursor.fetchall()
             retval = []
@@ -193,8 +192,6 @@ class DBManager:
             print(result2)
             print(result3)
             self.cnx.commit()
-            cursor.close()
-            self.cnx.close()
             if result1 > result2 and result1 > result3:#rock most likely
                 return 2
             elif result2 > result3 and result2 > result1:#paper most likely
@@ -211,41 +208,45 @@ class DBManager:
             elif result3 == result1:#scissors and rock equally likely
                 return 1
         except mysql.connector.Error as err:
+            return str(err)
+        finally:
             cursor.close()
-            self.cnx.close()
-            return err
+            self.closeConnection()
 
     def move_Insert(self, move_Info):
+        print("move insert")
         query = (
             "INSERT into move_history (rps_user_id, move_history_pMove, move_history_pResult, move_history_move, move_history_result, move_history_round) VALUES (%s, %s, %s, %s, %s, %s)"
         )
-        cursor = self.cnx.cursor(buffered=True)
         try:
+            self.connect()
+            cursor = self.cnx.cursor(buffered=True)
             cursor.execute(query, move_Info)
             self.cnx.commit()
-            cursor.close()
-            self.cnx.close()
+            # self.closeConnection()
             return 1
         except mysql.connector.Error as err:
+            return str(err)
+        finally:
             cursor.close()
-            self.cnx.close()
-            return err
+            self.closeConnection()
+            
 
     def updateWinLoss(self, param):
         query = (
             "UPDATE rps_user SET rps_user_wins = %s, rps_user_losses = %s WHERE rps_user_id = %s"
         )
-        cursor = self.cnx.cursor(buffered=True)
         try:
+            self.connect()
+            cursor = self.cnx.cursor(buffered=True)
             cursor.execute(query, param)
             self.cnx.commit()
-            cursor.close()
-            self.cnx.close()
             return "Updated Win and Loss!"
         except mysql.connector.Error as err:
-            cursor.close()
-            self.cnx.close()
             return err
+        finally:
+            cursor.close()
+            self.closeConnection()
 
     def updateScore(self, param):
         winnerId = param[0]
@@ -260,27 +261,26 @@ class DBManager:
             "UPDATE rps_user SET rps_user_score = %s WHERE rps_user_id = %s")
         queryInfoWinner = [winnerScore + scoreCalc, winnerId]
         queryInfoLoser = [loserScore - scoreCalc, loserId]
-        cursor = self.cnx.cursor(buffered=True)
         try:
+            self.connect()
+            cursor = self.cnx.cursor(buffered=True)
             cursor.execute(query, queryInfoWinner)
             cursor.execute(query, queryInfoLoser)
             self.cnx.commit()
-            cursor.close()
-            self.cnx.close()
             return "Updated Score!"
         except mysql.connector.Error as err:
-            cursor.close()
-            self.cnx.close()
             return err
         finally:
             cursor.close()
+            self.closeConnection()
 
     def leaderboard(self):
         query = (
             "SELECT rps_user_username, rps_user_score FROM rps_user ORDER BY rps_user_score"
         )
-        cursor = self.cnx.cursor(buffered=True)
         try:
+            self.connect()
+            cursor = self.cnx.cursor(buffered=True)
             cursor.execute(query)
             #Places all rows of query into 'result'
             result = cursor.fetchall()
@@ -290,35 +290,36 @@ class DBManager:
             #cursor.close()
             #self.cnx.close()
         except mysql.connector.Error as err:
-            cursor.close()
-            self.cnx.close()
             return err
         finally:
             cursor.close()
+            self.closeConnection()
 
     def getInventory(self, userId):
         query = ("SELECT purchase_skin_tag FROM purchases WHERE purchase_user_id = $s")
-        cursor = self.cnx.cursor(buffered=True)
         try:
+            self.connect()
+            cursor = self.cnx.cursor(buffered=True)
             cursor.execute(query, userId)
             #Places all rows of query into 'result'
             result = cursor.fetchall()
+            self.closeConnection()
             return result
             #  Old code
             #self.cnx.commit()
             #cursor.close()
             #self.cnx.close()
         except mysql.connector.Error as err:
-            cursor.close()
-            self.cnx.close()
-            return err
+            return str(err)
         finally:
             cursor.close()
+            self.closeConnection()
 
     def shop(self):
         query = ("SELECT skin_name, skin_tag, skin_price FROM skins ORDER BY skin_price")
-        cursor = self.cnx.cursor(buffered=True)
         try:
+            self.connect()
+            cursor = self.cnx.cursor(buffered=True)
             cursor.execute(query)
             #Places all rows of query into 'result'
             result = cursor.fetchall()
@@ -328,27 +329,28 @@ class DBManager:
             #cursor.close()
             #self.cnx.close()
         except mysql.connector.Error as err:
-            cursor.close()
-            self.cnx.close()
             return err
         finally:
             cursor.close()
+            self.closeConnection()
     
     def addFriend(self, twofriends):
         query = (
             "INSERT INTO friends (player_username, player2_username) VALUES (%s, %s)"
         )
-        cursor = self.cnx.cursor(buffered=True)
         try:
+            self.connect()
+            cursor = self.cnx.cursor(buffered=True)
             cursor.execute(query, twofriends)
             self.cnx.commit()
-            cursor.close()
-            self.cnx.close()
             return "1"
         except mysql.connector.Error as err:
             cursor.close()
-            self.cnx.close()
             return err
+        finally:
+            cursor.close()
+            self.closeConnection()
+
 
     def findFriends(self, username):
         query = (
@@ -357,13 +359,12 @@ class DBManager:
         inHouse = []
         inHouse.append(username)
         inHouse.append(username)
-        cursor = self.cnx.cursor()
         print("Entering try")
         try:
+            self.connect()
+            cursor = self.cnx.cursor(buffered=True)
             cursor.execute(query, inHouse)
             sqlretval = cursor.fetchall()
-            cursor.close()
-            self.cnx.close()
             print(sqlretval)
             holdretval = ()
             for x in sqlretval:
@@ -377,10 +378,11 @@ class DBManager:
             print(len(retval))
             return retval
         except mysql.connector.Error as err:
-            cursor.close()
-            self.cnx.close()
             print(err)
             return err
+        finally:
+            cursor.close()
+            self.closeConnection()
 
     def deleteMessage(self, que):
         query1 = (
@@ -388,8 +390,9 @@ class DBManager:
         query2 = (
             "DELETE FROM messages WHERE receiver_id = %s AND sender_id = %s AND message_content = %s"
         )
-        cursor = self.cnx.cursor()
         try:
+            self.connect()
+            cursor = self.cnx.cursor(buffered=True)
             inHouse = []
             inHouse.append(que[1])
             cursor.execute(query1, inHouse)
@@ -400,16 +403,15 @@ class DBManager:
             print(inHouse[1])
             cursor.execute(query2, inHouse)
             self.cnx.commit()
-            self.cnx.close()
-            cursor.close()
-            self.cnx.close()
             return "Message Deleted"
         except mysql.connector.Error as err:
-            cursor.close()
-            self.cnx.close()
             err = str(err._full_msg)
             print(err)
             return err
+        finally:
+            cursor.close()
+            self.closeConnection()
+    
 
     def challenge(self, que):
         query1 = (
@@ -418,8 +420,9 @@ class DBManager:
         query2 = (
             "INSERT INTO messages (sender_id, receiver_id, message_content) VALUES (%s, %s, %s)"
         )
-        cursor = self.cnx.cursor()
         try:
+            self.connect()
+            cursor = self.cnx.cursor(buffered=True)
             inHouse = []
             inHouse.append(que[1])
             print(inHouse)
@@ -430,21 +433,21 @@ class DBManager:
             inHouse = [que[0], sqlretval, que[2]]
             cursor.execute(query2, inHouse)
             self.cnx.commit()
-            cursor.close()
-            self.cnx.close()
             return "Challenge Made"
         except mysql.connector.Error as err:
-            cursor.close()
-            self.cnx.close()
             err = str(err)
             print(err)
             return err
+        finally:
+            cursor.close()
+            self.closeConnection()
 
     def returnMessages(self, que):
         query1 = ("SELECT sender_id, message_content FROM messages WHERE receiver_id = %s")
         query2 = ("SELECT rps_user_username FROM rps_user WHERE rps_user_ID IN (%s)")
-        cursor = self.cnx.cursor()
         try:
+            self.connect()
+            cursor = self.cnx.cursor(buffered=True)
             cursor.execute(query1, que)
             sqlretval = cursor.fetchall()
             inHouse = []
@@ -463,72 +466,74 @@ class DBManager:
                 retval += sqlretval[counter][1]
                 retval += ","
                 counter += 1
-            cursor.close()
-            self.cnx.close()
             print(retval)
             return retval
         except mysql.connector.Error as err:
-            cursor.close()
-            self.cnx.close()
             err = str(err)
             print(err)
             return err
-        return 0
+        finally:
+            cursor.close()
+            self.closeConnection()
+           
 
     def getPlayerIDFromUserName(self, param):
         print("We are in get player id")
         print(param)
         query = ("SELECT rps_user_ID FROM rps_user WHERE rps_user_username = %s")
-        cursor = self.cnx.cursor()
         try:
+            self.connect()
+            cursor = self.cnx.cursor(buffered=True)
             userName = [param, ]
             cursor.execute(query, userName)
             retval = cursor.fetchone()
-            cursor.close()
-            self.cnx.close()
             print(retval[0])
             return str(retval[0])
         except mysql.connector.Error as err:
-            cursor.close()
-            self.cnx.close()
             err = str(err)
             print(err)
             return err
+        finally:
+            cursor.close()
+            self.closeConnection()
+
     def autoMoveRemover(self):
         query = "DELETE FROM move_history WHERE rps_user_id = 19"
-        cursor = self.cnx.cursor()
         try:
+            self.connect()
+            cursor = self.cnx.cursor(buffered=True)
             cursor.execute(query)
             self.cnx.commit()
-            cursor.close()
-            self.cnx.close()
         except mysql.connector.Error as err:
+            print(err)
+        finally:
             cursor.close()
-            self.cnx.close()
-        return 0
+            self.closeConnection()
+            return 0
+
     def getUserScore(self, userid):
         query = ("SELECT rps_user_score FROM rps_user WHERE rps_user_userid = %s", userid)
-        cursor = self.cnx.cursor(buffered=True)
         try:
+            self.connect()
+            cursor = self.cnx.cursor(buffered=True)
             print("getUserScore executing")
             cursor.execute(query)
             sqlretval = cursor.fetchall()
-            cursor.close()
-            self.cnx.close()
             print(str(sqlretval[0]))
             return str(sqlretval[0])
         except mysql.connector.Error as err:
-            cursor.close()
-            self.cnx.close()
             return err
+        finally:
+            cursor.close()
+            self.closeConnection()
     
     def updateCurrency(self, buf):
         winnerScoreQuery = ("SELECT rps_user_score FROM rps_user WHERE rps_user_id = %s")
         loserScoreQuery = ("SELECT rps_user_score FROM rps_user WHERE rps_user_id = %s")
-        cnx1 = self.cnxpool.get_connection()
         # cursor = self.cnx.cursor(buffered=True)
-        cursor = cnx1.cursor(buffered=True)
         try:
+            self.connect()
+            cursor = self.cnx.cursor(buffered=True)
             print("updateCurrency executing")
             print("buf[0]: ", buf[0])
             buf0 = (buf[0], )
@@ -555,13 +560,13 @@ class DBManager:
                 underdogUpdateCurrencyQuery = ("UPDATE rps_user SET rps_user_currency = rps_user_currency + 15 WHERE rps_user_id = %s")
                 cursor.execute(underdogUpdateCurrencyQuery, buf0)
                 # self.cnx.commit()
-                cnx1.commit()
+                self.cnx.commit()
                 # print("Updated Currency (Underdog) for userid: ", winnerid)
             else:
                 regularUpdateCurrencyQuery = ("UPDATE rps_user SET rps_user_currency = rps_user_currency + 10 WHERE rps_user_id = %s")
                 cursor.execute(regularUpdateCurrencyQuery, buf0)
                 # self.cnx.commit()
-                cnx1.commit()
+                self.cnx.commit()
                 # print("Updated Currency for userid: ", winnerid)
             
             #return updated currency to winner
@@ -569,39 +574,53 @@ class DBManager:
             cursor.execute(getCurrencyQuery, buf0)
             updatedCurrency = cursor.fetchall()
             print("Updated Currency: ", str(updatedCurrency[0]))
-            cursor.close()
-            cnx1.close()
             return str(updatedCurrency[0][0])
         except mysql.connector.Error as err:
+            return str(err)
+        finally:
             cursor.close()
-            self.cnx.close()
-            return err
+            self.closeConnection()
 
-    # def updateCurrency(self, userid, gain):
-    #     query = ("UPDATE rps_user SET rps_user_currency = rps_user_currency + %s WHERE rps_user_userid = %s", (gain, userid))
-    #     cursor = self.cnx.cursor(buffered=True)
-    #     try:
-    #         cursor.execute(query)
-    #         result = cursor.fetchall()
-    #         cursor.close()
-    #         self.cnx.close()
-    #         return "Updated Currency!"
-    #     except mysql.connector.Error as err:
-    #         cursor.close()
-    #         self.cnx.close()
-    #         return err
+    def puchaseItem(self, userid, gain):
+        query = ("UPDATE rps_user SET rps_user_currency = rps_user_currency + %s WHERE rps_user_userid = %s", (gain, userid))
+        try:
+            self.connect()
+            cursor = self.cnx.cursor(buffered=True)
+            cursor.execute(query)
+            result = cursor.fetchall()
+            return "Updated Currency!"
+        except mysql.connector.Error as err:
+            return str(err)
+        finally:
+            cursor.close()
+            self.closeConnection()
     
     def getCurrency(self, userid):
         query = ("SELECT rps_user_currency FROM rps_user WHERE rps_user_userid = %s", userid)
-        cursor = self.cnx.cursor(buffered=True)
         try:
+            self.connect()
+            cursor = self.cnx.cursor(buffered=True)
             cursor.execute(query)
             result = cursor.fetchall()
-            cursor.close()
-            self.cnx.close()
             print("updated currency: ", result[0])
             return str(result[0])
         except mysql.connector.Error as err:
+            return str(err)
+        finally:
             cursor.close()
-            self.cnx.close()
-            return err
+            self.closeConnection()
+
+    def closeConnection(self):
+        self.DBCP.releaseConenction(self.cnx)
+        print("DBCP Count after release")
+        print(self.DBCP.getCount())
+
+    def connect(self):
+        while True:
+                if(self.DBCP.getCount() > 0):
+                    self.cnx = self.DBCP.getConnection()
+                    break
+                else:
+                    time.sleep(.5)
+        print("DBCP Count after getConnection(): ")
+        print(self.DBCP.getCount())

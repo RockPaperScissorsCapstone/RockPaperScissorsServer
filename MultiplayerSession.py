@@ -10,7 +10,7 @@ class MultiplayerSession(threading.Thread):
     player2Address = None
     messenger = None
 
-    def __init__(self, player1, player2, messenger):
+    def __init__(self, player1, player2, messenger, dbm):
         threading.Thread.__init__(self)
         print("Multiplayer started")
         self.player1 = player1[0]
@@ -18,6 +18,7 @@ class MultiplayerSession(threading.Thread):
         self.player1Address = player1[1]
         self.player2Address = player2[1]
         self.messenger = messenger
+        self.dbm = dbm
 
     def run(self):
         self.startMultiplayerSession(self.player1, self.player2)
@@ -41,8 +42,6 @@ class MultiplayerSession(threading.Thread):
         pconn2result = 3
         round = 1
         while conn1wins < 2 and conn2wins < 2:
-            dbmconn1 = DBManager()
-            dbmconn2 = DBManager()
             conn1Data = []
             conn2Data = []
             conn1Move = int(conn1.recv(1024))
@@ -56,14 +55,14 @@ class MultiplayerSession(threading.Thread):
                 conn1Data.append(conn1Move)
                 conn1Data.append(2)
                 conn1Data.append(round)
-                dbmconn1.move_Insert(conn1Data)
+                self.dbm.move_Insert(conn1Data)
                 conn2Data.append(conn2ID)
                 conn2Data.append(pconn2move)
                 conn2Data.append(pconn2result)
                 conn2Data.append(conn2Move)
                 conn2Data.append(2)
                 conn2Data.append(round)
-                dbmconn2.move_Insert(conn2Data)
+                self.dbm.move_Insert(conn2Data)
                 pconn1move = conn1Move
                 pconn2move = conn2Move
                 pconn1result = 2
@@ -77,14 +76,14 @@ class MultiplayerSession(threading.Thread):
                 conn1Data.append(conn1Move)
                 conn1Data.append(0)
                 conn1Data.append(round)
-                dbmconn1.move_Insert(conn1Data)
+                self.dbm.move_Insert(conn1Data)
                 conn2Data.append(conn2ID)
                 conn2Data.append(pconn2move)
                 conn2Data.append(pconn2result)
                 conn2Data.append(conn2Move)
                 conn2Data.append(1)
                 conn2Data.append(round)
-                dbmconn2.move_Insert(conn2Data)
+                self.dbm.move_Insert(conn2Data)
                 pconn1move = conn1Move
                 pconn2move = conn2Move
                 pconn1result = 0
@@ -99,14 +98,14 @@ class MultiplayerSession(threading.Thread):
                 conn1Data.append(conn1Move)
                 conn1Data.append(0)
                 conn1Data.append(round)
-                dbmconn1.move_Insert(conn1Data)
+                self.dbm.move_Insert(conn1Data)
                 conn2Data.append(conn2ID)
                 conn2Data.append(pconn2move)
                 conn2Data.append(pconn2result)
                 conn2Data.append(conn2Move)
                 conn2Data.append(1)
                 conn2Data.append(round)
-                dbmconn2.move_Insert(conn2Data)
+                self.dbm.move_Insert(conn2Data)
                 pconn1move = conn1Move
                 pconn2move = conn2Move
                 pconn1result = 0
@@ -121,14 +120,14 @@ class MultiplayerSession(threading.Thread):
                 conn1Data.append(conn1Move)
                 conn1Data.append(0)
                 conn1Data.append(round)
-                dbmconn1.move_Insert(conn1Data)
+                self.dbm.move_Insert(conn1Data)
                 conn2Data.append(conn2ID)
                 conn2Data.append(pconn2move)
                 conn2Data.append(pconn2result)
                 conn2Data.append(conn2Move)
                 conn2Data.append(1)
                 conn2Data.append(round)
-                dbmconn2.move_Insert(conn2Data)
+                self.dbm.move_Insert(conn2Data)
                 pconn1move = conn1Move
                 pconn2move = conn2Move
                 pconn1result = 0
@@ -143,14 +142,14 @@ class MultiplayerSession(threading.Thread):
                 conn1Data.append(conn1Move)
                 conn1Data.append(1)
                 conn1Data.append(round)
-                dbmconn1.move_Insert(conn1Data)
+                self.dbm.move_Insert(conn1Data)
                 conn2Data.append(conn2ID)
                 conn2Data.append(pconn2move)
                 conn2Data.append(pconn2result)
                 conn2Data.append(conn2Move)
                 conn2Data.append(0)
                 conn2Data.append(round)
-                dbmconn2.move_Insert(conn2Data)
+                self.dbm.move_Insert(conn2Data)
                 pconn1move = conn1Move
                 pconn2move = conn2Move
                 pconn1result = 1
@@ -165,14 +164,14 @@ class MultiplayerSession(threading.Thread):
                 conn1Data.append(conn1Move)
                 conn1Data.append(1)
                 conn1Data.append(round)
-                dbmconn1.move_Insert(conn1Data)
+                self.dbm.move_Insert(conn1Data)
                 conn2Data.append(conn2ID)
                 conn2Data.append(pconn2move)
                 conn2Data.append(pconn2result)
                 conn2Data.append(conn2Move)
                 conn2Data.append(0)
                 conn2Data.append(round)
-                dbmconn2.move_Insert(conn2Data)
+                self.dbm.move_Insert(conn2Data)
                 pconn1move = conn1Move
                 pconn2move = conn2Move
                 pconn1result = 1
@@ -187,14 +186,14 @@ class MultiplayerSession(threading.Thread):
                 conn1Data.append(conn1Move)
                 conn1Data.append(1)
                 conn1Data.append(round)
-                dbmconn1.move_Insert(conn1Data)
+                self.dbm.move_Insert(conn1Data)
                 conn2Data.append(conn2ID)
                 conn2Data.append(pconn2move)
                 conn2Data.append(pconn2result)
                 conn2Data.append(conn2Move)
                 conn2Data.append(0)
                 conn2Data.append(round)
-                dbmconn2.move_Insert(conn2Data)
+                self.dbm.move_Insert(conn2Data)
                 pconn1move = conn1Move
                 pconn2move = conn2Move
                 pconn1result = 1
@@ -202,9 +201,7 @@ class MultiplayerSession(threading.Thread):
                 conn1wins += 1
             round += 1
             print(conn1wins)
-            print(conn2wins)
-
-        dbmCurrency = DBManager()    
+            print(conn2wins)  
         if conn1wins == 2:
             conn1.sendall("2".encode('ascii'))
             conn2.sendall("-2".encode('ascii'))
@@ -213,7 +210,7 @@ class MultiplayerSession(threading.Thread):
             buffer = []
             buffer.append(conn1ID)
             buffer.append(conn2ID)
-            updatedConn1Currency = dbmCurrency.updateCurrency(buffer)
+            updatedConn1Currency = self.dbm.updateCurrency(buffer)
             print(updatedConn1Currency)
             conn1.sendall(updatedConn1Currency.encode('ascii'))
             self.messenger.addIpAddress(self.player1Address[0])
@@ -221,7 +218,7 @@ class MultiplayerSession(threading.Thread):
         else:
             conn1.sendall("-2".encode('ascii'))
             conn2.sendall("2".encode('ascii'))
-            updatedConn2Currency = dbmCurrency.updateCurrency(str(conn2ID), str(conn1ID))
+            updatedConn2Currency = self.dbm.updateCurrency(str(conn2ID), str(conn1ID))
             print(updatedConn2Currency)
             conn2.sendall(updatedConn2Currency.encode('ascii'))
             self.messenger.addIpAddress(self.player1Address[0])
