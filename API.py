@@ -140,3 +140,6 @@ class api:
         winnerId = self.Decoded(que.removefromq())
         loserId = self.Decoded(que.removefromq())
         return self.dbm.puchaseItem(winnerId, loserId)
+    
+    def closeConnection(self):
+        self.dbm.closeConnection()

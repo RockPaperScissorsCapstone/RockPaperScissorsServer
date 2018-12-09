@@ -148,6 +148,7 @@ class Assigner(threading.Thread):
                 print(onlineUsersList)
                 print(','.join(onlineUsersList))
                 self.conn.sendall(','.join(onlineUsersList).encode('ascii'))
+                APICommand.closeConnection()
             elif(function == "Logout"):
                 callingIP = self.addr[0]
                 print(self.addr[0])
