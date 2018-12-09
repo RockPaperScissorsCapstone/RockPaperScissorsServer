@@ -202,7 +202,6 @@ class DBManager:
             return str(err)
         finally:
             cursor.close()
-            self.closeConnection()
 
     def move_Insert(self, move_Info):
         print("move insert")
@@ -219,7 +218,7 @@ class DBManager:
             return str(err)
         finally:
             cursor.close()
-            self.closeConnection()
+            
 
     def updateWinLoss(self, param):
         query = (

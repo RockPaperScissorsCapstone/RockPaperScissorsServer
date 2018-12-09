@@ -97,6 +97,7 @@ class session:
 
             #conn.sendall(data)
         print("Game Over.")
+        self.dbm.closeConnection()
         if(playerWins == 2):
             print("Player wins")
             return "1"
