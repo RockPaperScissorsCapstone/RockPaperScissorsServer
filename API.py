@@ -141,5 +141,3 @@ class api:
         loserId = self.Decoded(que.removefromq())
         return self.dbm.puchaseItem(winnerId, loserId)
     
-    def closeConnection(self):
-        self.dbm.closeConnection()

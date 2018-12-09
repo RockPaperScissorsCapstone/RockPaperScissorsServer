@@ -106,7 +106,6 @@ class Assigner(threading.Thread):
                 print(resultString)
                 self.conn.sendall(resultString.encode('ascii'))
             elif(function == "PlayWithRandom"):
-                APICommand.closeConnection()
                 package = (self.conn, self.addr)
                 self.socketQue.addtoq(package)
                 while True:
@@ -149,7 +148,6 @@ class Assigner(threading.Thread):
                 print(onlineUsersList)
                 print(','.join(onlineUsersList))
                 self.conn.sendall(','.join(onlineUsersList).encode('ascii'))
-                APICommand.closeConnection()
             elif(function == "Logout"):
                 callingIP = self.addr[0]
                 print(self.addr[0])
@@ -161,7 +159,6 @@ class Assigner(threading.Thread):
                         removedUser = self.statusQue.removeUserFromQueue(loggedInUser)
                         print("Removed: ", removedUser)
                 self.conn.sendall("logged off".encode('ascii'))
-                APICommand.closeConnection()
             elif(function == "UpdateCurrency"):
                 result = APICommand.puchaseItem(myQue)
                 self.conn.sendall(str(result).encode('ascii'))

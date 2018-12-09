@@ -16,14 +16,6 @@ class DBManager:
     def __init__(self, DBCP):
         try:
             self.DBCP = DBCP
-            while True:
-                if(self.DBCP.getCount() > 0):
-                    self.cnx = self.DBCP.getConnection()
-                    break
-                else:
-                    time.sleep(.5)
-            print("DBCP Count after getConnection(): ")
-            print(self.DBCP.getCount())
             # Production Credentials
             # self.cnx = mysql.connector.connect(
             #     user='rpsdb1',
@@ -70,6 +62,7 @@ class DBManager:
             "(rps_user_username, rps_user_email, rps_user_password, rps_user_fname, rps_user_lname) "
             "VALUES (%s, %s, %s, %s, %s)")
         try:
+            self.connect()
             cursor = self.cnx.cursor()
             cursor.execute(add_user, userInfo)
             self.cnx.commit()
@@ -98,8 +91,9 @@ class DBManager:
         login = (
             "SELECT rps_user_id, rps_user_username, rps_user_email, rps_user_fname, rps_user_lname, rps_user_wins, rps_user_losses, rps_user_currency, rps_user_score FROM rps_user WHERE rps_user_username = %s AND rps_user_password = %s"
         )
-        cursor = self.cnx.cursor(buffered=True)
         try:
+            self.connect()
+            cursor = self.cnx.cursor(buffered=True)
             cursor.execute(login, userInfo)
             rows = cursor.rowcount
             #Obtains the row information in form of tuple
@@ -146,9 +140,10 @@ class DBManager:
         #print("param = " + param)
         get_account = (
             "UPDATE rps_user SET rps_user_username = %s WHERE rps_user_id = %s"
-        )
-        cursor = self.cnx.cursor(buffered=True)
+        )      
         try:
+            self.connect()
+            cursor = self.cnx.cursor(buffered=True)
             cursor.execute(get_account, param)
             #result = str(cursor.fetchone()[0])
             self.cnx.commit()
@@ -173,8 +168,9 @@ class DBManager:
         query3 = (
             "SELECT COUNT(*) FROM move_history WHERE rps_user_id = %s AND move_history_pMove = %s AND move_history_pResult = %s AND move_history_move = 3"
         )
-        cursor = self.cnx.cursor(buffered=True)
         try:
+            self.connect()
+            cursor = self.cnx.cursor(buffered=True)
             cursor.execute(query1, move_Info)
             result1 = cursor.fetchone()
             cursor.execute(query2, move_Info)
@@ -208,8 +204,9 @@ class DBManager:
         query = (
             "INSERT into move_history (rps_user_id, move_history_pMove, move_history_pResult, move_history_move, move_history_result, move_history_round) VALUES (%s, %s, %s, %s, %s, %s)"
         )
-        cursor = self.cnx.cursor(buffered=True)
         try:
+            self.connect()
+            cursor = self.cnx.cursor(buffered=True)
             cursor.execute(query, move_Info)
             self.cnx.commit()
             # self.closeConnection()
@@ -224,8 +221,9 @@ class DBManager:
         query = (
             "UPDATE rps_user SET rps_user_wins = %s, rps_user_losses = %s WHERE rps_user_id = %s"
         )
-        cursor = self.cnx.cursor(buffered=True)
         try:
+            self.connect()
+            cursor = self.cnx.cursor(buffered=True)
             cursor.execute(query, param)
             self.cnx.commit()
             return "Updated Win and Loss!"
@@ -248,8 +246,9 @@ class DBManager:
             "UPDATE rps_user SET rps_user_score = %s WHERE rps_user_id = %s")
         queryInfoWinner = [winnerScore + scoreCalc, winnerId]
         queryInfoLoser = [loserScore - scoreCalc, loserId]
-        cursor = self.cnx.cursor(buffered=True)
         try:
+            self.connect()
+            cursor = self.cnx.cursor(buffered=True)
             cursor.execute(query, queryInfoWinner)
             cursor.execute(query, queryInfoLoser)
             self.cnx.commit()
@@ -264,8 +263,9 @@ class DBManager:
         query = (
             "SELECT rps_user_username, rps_user_score FROM rps_user ORDER BY rps_user_score"
         )
-        cursor = self.cnx.cursor(buffered=True)
         try:
+            self.connect()
+            cursor = self.cnx.cursor(buffered=True)
             cursor.execute(query)
             #Places all rows of query into 'result'
             result = cursor.fetchall()
@@ -282,8 +282,9 @@ class DBManager:
 
     def getInventory(self, userId):
         query = ("SELECT purchase_skin_tag FROM purchases WHERE purchase_user_id = $s")
-        cursor = self.cnx.cursor(buffered=True)
         try:
+            self.connect()
+            cursor = self.cnx.cursor(buffered=True)
             cursor.execute(query, userId)
             #Places all rows of query into 'result'
             result = cursor.fetchall()
@@ -301,8 +302,9 @@ class DBManager:
 
     def shop(self):
         query = ("SELECT skin_name, skin_tag, skin_price FROM skins ORDER BY skin_price")
-        cursor = self.cnx.cursor(buffered=True)
         try:
+            self.connect()
+            cursor = self.cnx.cursor(buffered=True)
             cursor.execute(query)
             #Places all rows of query into 'result'
             result = cursor.fetchall()
@@ -321,8 +323,9 @@ class DBManager:
         query = (
             "INSERT INTO friends (player_username, player2_username) VALUES (%s, %s)"
         )
-        cursor = self.cnx.cursor(buffered=True)
         try:
+            self.connect()
+            cursor = self.cnx.cursor(buffered=True)
             cursor.execute(query, twofriends)
             self.cnx.commit()
             return "1"
@@ -341,9 +344,10 @@ class DBManager:
         inHouse = []
         inHouse.append(username)
         inHouse.append(username)
-        cursor = self.cnx.cursor()
         print("Entering try")
         try:
+            self.connect()
+            cursor = self.cnx.cursor(buffered=True)
             cursor.execute(query, inHouse)
             sqlretval = cursor.fetchall()
             print(sqlretval)
@@ -371,8 +375,9 @@ class DBManager:
         query2 = (
             "DELETE FROM messages WHERE receiver_id = %s AND sender_id = %s AND message_content = %s"
         )
-        cursor = self.cnx.cursor()
         try:
+            self.connect()
+            cursor = self.cnx.cursor(buffered=True)
             inHouse = []
             inHouse.append(que[1])
             cursor.execute(query1, inHouse)
@@ -400,8 +405,9 @@ class DBManager:
         query2 = (
             "INSERT INTO messages (sender_id, receiver_id, message_content) VALUES (%s, %s, %s)"
         )
-        cursor = self.cnx.cursor()
         try:
+            self.connect()
+            cursor = self.cnx.cursor(buffered=True)
             inHouse = []
             inHouse.append(que[1])
             print(inHouse)
@@ -424,8 +430,9 @@ class DBManager:
     def returnMessages(self, que):
         query1 = ("SELECT sender_id, message_content FROM messages WHERE receiver_id = %s")
         query2 = ("SELECT rps_user_username FROM rps_user WHERE rps_user_ID IN (%s)")
-        cursor = self.cnx.cursor()
         try:
+            self.connect()
+            cursor = self.cnx.cursor(buffered=True)
             cursor.execute(query1, que)
             sqlretval = cursor.fetchall()
             inHouse = []
@@ -459,8 +466,9 @@ class DBManager:
         print("We are in get player id")
         print(param)
         query = ("SELECT rps_user_ID FROM rps_user WHERE rps_user_username = %s")
-        cursor = self.cnx.cursor()
         try:
+            self.connect()
+            cursor = self.cnx.cursor(buffered=True)
             userName = [param, ]
             cursor.execute(query, userName)
             retval = cursor.fetchone()
@@ -476,8 +484,9 @@ class DBManager:
 
     def autoMoveRemover(self):
         query = "DELETE FROM move_history WHERE rps_user_id = 19"
-        cursor = self.cnx.cursor()
         try:
+            self.connect()
+            cursor = self.cnx.cursor(buffered=True)
             cursor.execute(query)
             self.cnx.commit()
         except mysql.connector.Error as err:
@@ -489,8 +498,9 @@ class DBManager:
 
     def getUserScore(self, userid):
         query = ("SELECT rps_user_score FROM rps_user WHERE rps_user_userid = %s", userid)
-        cursor = self.cnx.cursor(buffered=True)
         try:
+            self.connect()
+            cursor = self.cnx.cursor(buffered=True)
             print("getUserScore executing")
             cursor.execute(query)
             sqlretval = cursor.fetchall()
@@ -506,8 +516,9 @@ class DBManager:
         winnerScoreQuery = ("SELECT rps_user_score FROM rps_user WHERE rps_user_id = %s")
         loserScoreQuery = ("SELECT rps_user_score FROM rps_user WHERE rps_user_id = %s")
         # cursor = self.cnx.cursor(buffered=True)
-        cursor = self.cnx.cursor(buffered=True)
         try:
+            self.connect()
+            cursor = self.cnx.cursor(buffered=True)
             print("updateCurrency executing")
             print("buf[0]: ", buf[0])
             buf0 = (buf[0], )
@@ -557,8 +568,9 @@ class DBManager:
 
     def puchaseItem(self, userid, gain):
         query = ("UPDATE rps_user SET rps_user_currency = rps_user_currency + %s WHERE rps_user_userid = %s", (gain, userid))
-        cursor = self.cnx.cursor(buffered=True)
         try:
+            self.connect()
+            cursor = self.cnx.cursor(buffered=True)
             cursor.execute(query)
             result = cursor.fetchall()
             return "Updated Currency!"
@@ -570,8 +582,9 @@ class DBManager:
     
     def getCurrency(self, userid):
         query = ("SELECT rps_user_currency FROM rps_user WHERE rps_user_userid = %s", userid)
-        cursor = self.cnx.cursor(buffered=True)
         try:
+            self.connect()
+            cursor = self.cnx.cursor(buffered=True)
             cursor.execute(query)
             result = cursor.fetchall()
             print("updated currency: ", result[0])
@@ -585,4 +598,14 @@ class DBManager:
     def closeConnection(self):
         self.DBCP.releaseConenction(self.cnx)
         print("DBCP Count after release")
+        print(self.DBCP.getCount())
+
+    def connect(self):
+        while True:
+                if(self.DBCP.getCount() > 0):
+                    self.cnx = self.DBCP.getConnection()
+                    break
+                else:
+                    time.sleep(.5)
+        print("DBCP Count after getConnection(): ")
         print(self.DBCP.getCount())
