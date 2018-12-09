@@ -6,7 +6,6 @@ import array
 import json
 import random
 
-
 class DBManager:
     cnx = None
     cnxpool = None
@@ -64,11 +63,16 @@ class DBManager:
             self.cnx.commit()
             cursor.close()
             self.cnx.close()
-            return ("1")
+            return("0")
         except mysql.connector.Error as err:
             cursor.close()
             self.cnx.close()
-            return err
+            print(str(err))
+            if("username" in str(err)):
+                return("1")
+            elif("email" in str(err)):
+                return("2")
+            return str(err)
 
     # Prepares and executes the select statement for the login function and returns all data
     # associated with the user account with whos password and username was matched.
@@ -94,45 +98,53 @@ class DBManager:
             rows = cursor.rowcount
             #Obtains the row information in form of tuple
             result = cursor.fetchone()
-            #Parses out the tuple into more understandable variables
-            user_id = str(result[0])
-            user_username = str(result[1])
-            user_email = str(result[2])
-            user_fname = str(result[3])
-            user_lname = str(result[4])
-            user_wins = str(result[5])
-            user_losses = str(result[6])
-            user_currency = str(result[7])
-            user_score = str(result[8])
-            #Packages the inforamtion into json format to be sent to client
-            accountInfo_json = {
-                "user_id": user_id,
-                "firstname": user_fname,
-                "lastname": user_lname,
-                "email": user_email,
-                "username": user_username,
-                "wins": user_wins,
-                "losses": user_losses,
-                "currency": user_currency,
-                "score": user_score
-            }
-            #Turns the json object into a string object
-            accountInfo_string = json.dumps(accountInfo_json)
+            if(rows == 1):
+                #Parses out the tuple into more understandable variables
+                user_id = str(result[0])
+                user_username = str(result[1])
+                user_email = str(result[2])
+                user_fname = str(result[3])
+                user_lname = str(result[4])
+                user_wins = str(result[5])
+                user_losses = str(result[6])
+                user_currency = str(result[7])
+                user_score = str(result[8])
+                #Packages the inforamtion into json format to be sent to client
+                accountInfo_json = {
+                    "user_id" : user_id, 
+                    "firstname" : user_fname, 
+                    "lastname" : user_lname, 
+                    "email" : user_email, 
+                    "username" : user_username,
+                    "wins" : user_wins, 
+                    "losses" : user_losses, 
+                    "currency" : user_currency, 
+                    "score" : user_score
+                    }
+                #Turns the json object into a string object
+                accountInfo_string = json.dumps(accountInfo_json)
 
-            cursor.close()
-            self.cnx.close()
+                cursor.close()
+                self.cnx.close()
+                return(accountInfo_string)
+            else:
+                cursor.close()
+                self.cnx.close()
+                return("Login Failure")
             # Will check to see if the login returned any information and then returns
             # said information as a string in json format
-            if rows == 1:
-                return (accountInfo_string)
-            else:
-                return ("Login Failure")
         except mysql.connector.Error as err:
-            print(err)
+            print(str(err))
             cursor.close()
             self.cnx.close()
-            return err
-
+            return str(err)
+        except TypeError as err:
+            print("Type Error: ")
+            print(str(err))
+            cursor.close()
+            self.cnx.close()
+            return "Invalid Username or Password"
+    
     def updateAccountInfo(self, param):
         #print("param = " + param)
         get_account = (
@@ -156,40 +168,47 @@ class DBManager:
 
     def AI_fetch(self, move_Info):
         print(move_Info)
-        query1 = (
-            "SELECT COUNT(*) FROM move_history WHERE rps_user_id = %s AND move_history_pMove = %s AND move_history_pResult = %s AND move_history_move = 1"
-        )
-        query2 = (
-            "SELECT COUNT(*) FROM move_history WHERE rps_user_id = %s AND move_history_pMove = %s AND move_history_pResult = %s AND move_history_move = 2"
-        )
-        query3 = (
-            "SELECT COUNT(*) FROM move_history WHERE rps_user_id = %s AND move_history_pMove = %s AND move_history_pResult = %s AND move_history_move = 3"
-        )
+        query1 = ("SELECT move_history_move FROM move_history WHERE rps_user_id = %s AND move_history_pMove = %s AND move_history_pResult = %s")
         cursor = self.cnx.cursor(buffered=True)
+        n = random.randrange(10,20)
         try:
             cursor.execute(query1, move_Info)
-            result1 = cursor.fetchone()
-            cursor.execute(query2, move_Info)
-            result2 = cursor.fetchone()
-            cursor.execute(query3, move_Info)
-            result3 = cursor.fetchone()
+            result = cursor.fetchall()
+            retval = []
+            result1 = 0
+            result2 = 0
+            result3 = 0
+            for x in result:
+                retval.append(x[0])
+            if len(retval) > n:
+                retval = retval[len(retval)-n:len(retval)]
+            for x in retval:
+                if x == 1:
+                    result1 += 1
+                elif x == 2:
+                    result2 += 1
+                elif x == 3:
+                    result3 += 1
+            print(result1)
+            print(result2)
+            print(result3)
             self.cnx.commit()
             cursor.close()
             self.cnx.close()
-            if result1[0] > result2[0] and result1[0] > result3[0]:  #rock most likely
+            if result1 > result2 and result1 > result3:#rock most likely
                 return 2
-            elif result2[0] > result3[0] and result2[0] > result1[0]:  #paper most likely
+            elif result2 > result3 and result2 > result1:#paper most likely
                 return 3
-            elif result3[0] > result2[0] and result3[0] > result1[0]:  #scissors most likely
+            elif result3 > result2 and result3 > result1:#scissors most likely
                 return 1
-            elif result1[0] == result2[0] and result2[0] == result3[0]:#all three equally likely, needs to be replaced with data mining when implemented
+            elif result1 == result2 and result2 == result3:#all three equally likely, needs to be replaced with data mining when implemented
                 retval = random.randrange(1, 3)
                 return retval
-            elif result1[0] == result2[0]:  #rock and paper equally likely
+            elif result1 == result2:#rock and paper equally likely
                 return 2
-            elif result2[0] == result3[0]:  #paper and scissors equally likely
+            elif result2 == result3:#paper and scissors equally likely
                 return 3
-            elif result3[0] == result1[0]:  #scissors and rock equally likely
+            elif result3 == result1:#scissors and rock equally likely
                 return 1
         except mysql.connector.Error as err:
             cursor.close()

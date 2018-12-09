@@ -4,10 +4,8 @@ class myQueue:
 
     def addtoq(self,dataval):
     # Insert method to add element
-        if dataval not in self.queue:
-            self.queue.insert(0,dataval)
-            return True
-        return False
+        self.queue.insert(0,dataval)
+        return True
 
     def size(self):
         return len(self.queue)

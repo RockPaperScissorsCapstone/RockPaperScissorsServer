@@ -7,11 +7,14 @@ from Assigner import Assigner
 
 class ConnectionManager(threading.Thread):
     # Production Host
-    HOST = '172.31.47.99'
+
     # HOST = '172.31.36.15'
 
+    # HOST = '172.31.47.99'
+
     # Nicks Test Host
-    # HOST = '172.31.20.135'
+    HOST = '172.31.20.135'
+    
     PORT = 65432
     socketQue = None
 
