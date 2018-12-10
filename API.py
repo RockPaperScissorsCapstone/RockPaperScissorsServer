@@ -102,6 +102,7 @@ class api:
                 if(challenge[0] == cUserID):
                     success = "wait"
                     playerOne = challenge[1][0]
+                    print("playerOne: ", playerOne)
                     playerTwo = playerPackage[0]
                     playerOne.sendall(("1").encode('ascii'))
                     playerTwo.sendall(("Finished").encode('ascii'))

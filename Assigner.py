@@ -133,12 +133,12 @@ class Assigner(threading.Thread):
                 result = APICommand.addMessage(myQue, self.messages, package)
                 if(result == "wait"):
                     while True:
-                        messageList = self.messages.getList()
+                        messageList = self.messages.getChallengeList()
                         if self.addr[0] in messageList:
-                            self.messages.removeFromList(self.addr[0])
+                            self.messages.removeFromChallengeList(self.addr[0])
                             break
                         else:
-                            time.sleep(1)
+                            time.sleep(.25)
                 else:
                     self.conn.sendall(result.encode('ascii'))
             elif(function == "returnMessages"):

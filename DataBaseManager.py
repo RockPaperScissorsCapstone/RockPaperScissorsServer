@@ -298,7 +298,7 @@ class DBManager:
 
     def leaderboard(self):
         query = (
-            "SELECT rps_user_username, rps_user_score FROM rps_user ORDER BY rps_user_score"
+            "SELECT rps_user_username, rps_user_score FROM rps_user ORDER BY rps_user_score DESC"
         )
         try:
             self.connect()
@@ -477,7 +477,7 @@ class DBManager:
             inHouse = []
             for x in sqlretval:
                 inHouse.append(x[0])
-            print(inHouse)
+            # print(inHouse)
             in_p = ", ".join(map(lambda x: "%s", inHouse))
             query2 = query2 % in_p
             cursor.execute(query2, inHouse)
@@ -490,7 +490,7 @@ class DBManager:
                 retval += sqlretval[counter][1]
                 retval += ","
                 counter += 1
-            print(retval)
+            # print(retval)
             return retval
         except mysql.connector.Error as err:
             err = str(err)
