@@ -218,7 +218,8 @@ class MultiplayerSession(threading.Thread):
         else:
             conn1.sendall("-2".encode('ascii'))
             conn2.sendall("2".encode('ascii'))
-            updatedConn2Currency = self.dbm.updateCurrency(str(conn2ID), str(conn1ID))
+            buf = (str(conn2ID), str(conn1ID))
+            updatedConn2Currency = self.dbm.updateCurrency(buf)
             print(updatedConn2Currency)
             conn2.sendall(updatedConn2Currency.encode('ascii'))
             self.messenger.addIpAddress(self.player1Address[0])
