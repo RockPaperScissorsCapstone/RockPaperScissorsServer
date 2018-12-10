@@ -254,21 +254,19 @@ class DBManager:
             self.closeConnection()
 
     def getScore(self, param):
-        query = ("SELECT rps_user_score FROM rps_user WHERE rps_user_id = %s")
-        
+        query = ("SELECT rps_user_score FROM rps_user WHERE rps_user_id = %s")       
         try:
             self.connect()
             cursor = self.cnx.cursor(buffered=True)
             cursor.execute(query, param)
             retval = cursor.fetchone()
             retval = retval[0]
-            cursor.close()
-            self.cnx.close()
             return retval
         except:
-            cursor.close()
-            self.cnx.close()
             return 'error'
+        finally:
+            cursor.close()
+            self.closeConnection()
 
     def updateScore(self, param):
         winnerId = param[0]
@@ -686,6 +684,7 @@ class DBManager:
         finally:
             cursor.close()
             self.closeConnection()
+
 
 
     def closeConnection(self):
