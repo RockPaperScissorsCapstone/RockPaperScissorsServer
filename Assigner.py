@@ -125,9 +125,10 @@ class Assigner(threading.Thread):
                     messageList = self.messages.getList()
                     if self.addr[0] in messageList:
                         self.messages.removeFromList(self.addr[0])
+                        self.conn.sendall(("Socket Closing".encode('ascii')))
                         break
                     else:
-                        time.sleep(1)
+                        time.sleep(.25)
             elif(function == "addMessage"):
                 package = (self.conn, self.addr)
                 result = APICommand.addMessage(myQue, self.messages, package)
@@ -138,7 +139,7 @@ class Assigner(threading.Thread):
                             self.messages.removeFromList(self.addr[0])
                             break
                         else:
-                            time.sleep(1)
+                            time.sleep(.25)
                 else:
                     self.conn.sendall(result.encode('ascii'))
             elif(function == "returnMessages"):
