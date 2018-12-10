@@ -52,9 +52,6 @@ class Assigner(threading.Thread):
                 self.conn.sendall(result.encode('ascii'))
             # Starts the login process
             elif(function == "Login"):
-                if myQue[1] in self.statusQue:
-                    self.conn.send("Login Failed".encode('ascii'))
-                    return
                 APIcommand = api()
                 result = APIcommand.Login(myQue)
                 print("result: " + result)
