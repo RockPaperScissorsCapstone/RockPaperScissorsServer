@@ -40,14 +40,27 @@ def main():
         pmove = autoMove
         presult = result
         counter += 1
+        to_write = [counter]
+        if autoMove == 1:
+            to_write.append("Rock")
+        elif autoMove == 2:
+            to_write.append("Paper")
+        else:
+            to_write.append("Scissors")
+        if aiMove == 1:
+            to_write.append("Rock")
+        elif aiMove == 2:
+            to_write.append("Paper")
+        else:
+            to_write.append("Scissors")
         if result == 2:
-            to_write = [counter, autoMove, aiMove, 0]
+            to_write.append("Tie")
             ties += 1
         elif result == 1:
-            to_write = [counter, autoMove, aiMove, -1]
+            to_write.append("Loss")
             losses += 1
         else:
-            to_write = [counter, autoMove, aiMove, 1]
+            to_write.append("Win")
             wins += 1
         output_writer.writerow(to_write)
     output_writer.writerow(["Wins", wins])
