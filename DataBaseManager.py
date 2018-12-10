@@ -582,19 +582,19 @@ class DBManager:
             cursor.close()
             self.closeConnection()
 
-    def puchaseItem(self, userid, gain):
-        query = ("UPDATE rps_user SET rps_user_currency = rps_user_currency + %s WHERE rps_user_userid = %s", (gain, userid))
-        try:
-            self.connect()
-            cursor = self.cnx.cursor(buffered=True)
-            cursor.execute(query)
-            result = cursor.fetchall()
-            return "Updated Currency!"
-        except mysql.connector.Error as err:
-            return str(err)
-        finally:
-            cursor.close()
-            self.closeConnection()
+    # def puchaseItem(self, userid, gain):
+    #     query = ("UPDATE rps_user SET rps_user_currency = rps_user_currency + %s WHERE rps_user_userid = %s", (gain, userid))
+    #     try:
+    #         self.connect()
+    #         cursor = self.cnx.cursor(buffered=True)
+    #         cursor.execute(query)
+    #         result = cursor.fetchall()
+    #         return "Updated Currency!"
+    #     except mysql.connector.Error as err:
+    #         return str(err)
+    #     finally:
+    #         cursor.close()
+    #         self.closeConnection()
     
     def getCurrency(self, userid):
         query = ("SELECT rps_user_currency FROM rps_user WHERE rps_user_userid = %s", userid)
@@ -610,6 +610,34 @@ class DBManager:
         finally:
             cursor.close()
             self.closeConnection()
+
+
+    def purchaseItem(self, param):
+        query = ("INSERT INTO purchases (purchase_user_id, purchase_skin_id) VALUES (%s, %s)")
+        try:
+            self.connect()
+            cursor = self.cnx.cursor(buffered=True)
+            cursor.execute(query, param)
+            return "Set player Currency!"
+        except mysql.connector.Error as err:
+            return str(err)
+        finally:
+            cursor.close()
+            self.closeConnection()
+
+    def setPlayerCurrency(self, param):
+        query = ("UPDATE rps_user SET rps_user_currency = %s WHERE rps_user_userid = %s")
+        try:
+            self.connect()
+            cursor = self.cnx.cursor(buffered=True)
+            cursor.execute(query, param)
+            return "Set player Currency!"
+        except mysql.connector.Error as err:
+            return str(err)
+        finally:
+            cursor.close()
+            self.closeConnection()
+
 
     def closeConnection(self):
         self.DBCP.releaseConnection(self.cnx)

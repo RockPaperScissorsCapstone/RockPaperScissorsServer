@@ -136,8 +136,14 @@ class api:
         userName = self.Decoded(que.removefromq())
         return self.dbm.returnMessages([userName])
 
-    def puchaseItem(self, que):
-        winnerId = self.Decoded(que.removefromq())
-        loserId = self.Decoded(que.removefromq())
-        return self.dbm.puchaseItem(winnerId, loserId)
+    def purchaseItem(self, que):
+        userId = self.Decoded(que.removefromq())
+        skinId = self.Decoded(que.removefromq())
+        cost = self.Decoded(que.removefromq())
+        playerCurrency = self.dbm.getCurrency(userId)
+        updatedCurrency = playerCurrency - cost
+        paramPurchase = (userId, skinId)
+        paramSetCurrency = (updatedCurrency, userId)
+        self.dbm.updateCurrency(paramSetCurrency)
+        return self.dbm.purchaseItem(paramPurchase)
     

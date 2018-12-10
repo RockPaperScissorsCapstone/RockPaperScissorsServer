@@ -160,7 +160,10 @@ class Assigner(threading.Thread):
                         print("Removed: ", removedUser)
                 self.conn.sendall("logged off".encode('ascii'))
             elif(function == "UpdateCurrency"):
-                result = APICommand.puchaseItem(myQue)
+                result = APICommand.purchaseItem(myQue)
+                self.conn.sendall(str(result).encode('ascii'))
+            elif(function == "BuySkin"):
+                result = APICommand.purchaseItem(myQue)
                 self.conn.sendall(str(result).encode('ascii'))
             else:
                 print("didn't match")
