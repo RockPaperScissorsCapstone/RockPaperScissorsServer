@@ -53,10 +53,20 @@ class Assigner(threading.Thread):
                 self.conn.sendall(result.encode('ascii'))
             # Starts the login process
             elif(function == "Login"):
-                if myQue[1] in self.statusQue:
-                    self.conn.sendall("Login Falied".encode('ascii'))
-                    return
+                # if myQue.peek(1) in self.statusQue:
+                #     self.conn.sendall("Login Failed".encode('ascii'))
+                #     return
                 loginInformation = (self.addr[0], myQue.queue[1].decode('ascii')) #store ip address, and username
+                # if loginInformation[1] in self.statusQue.queue:
+                #     self.conn.sendall("Login Failed".encode('ascii'))
+                #     return
+                onlineUsersList = []
+                for loggedInUser in self.statusQue.queue:
+                    print(loggedInUser[1])
+                    onlineUsersList.append(loggedInUser[1])
+                if myQue.queue[1].decode('ascii') in onlineUsersList:
+                    self.conn.sendall("Login Failed".encode('ascii'))
+                    return
                 self.statusQue.addtoq(loginInformation)
                 result = APICommand.Login(myQue)
                 print("result: " + result)

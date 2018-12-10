@@ -19,3 +19,6 @@ class myQueue:
         if len(self.queue) > 0:
             return self.queue.pop()
         return ("No elements in Queue!")
+    
+    def peek(self, id):
+        return self.queue.index(id)

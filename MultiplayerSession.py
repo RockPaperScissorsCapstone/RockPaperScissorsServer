@@ -33,7 +33,7 @@ class MultiplayerSession(threading.Thread):
         # conn1.sendall(str(conn2ID).encode('ascii'))
         # conn2.sendall(str(conn1ID).encode('ascii'))
         conn1.sendall(playerTwoUsername.encode('ascii'))
-        conn1.sendall(playerOneUsername.encode('ascii'))
+        conn2.sendall(playerOneUsername.encode('ascii'))
         conn1.sendall("1".encode('ascii'))
         conn2.sendall("1".encode('ascii'))
         

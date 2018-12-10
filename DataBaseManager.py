@@ -166,7 +166,6 @@ class DBManager:
     def AI_fetch(self, move_Info):
         print(move_Info)
         query1 = ("SELECT move_history_move FROM move_history WHERE rps_user_id = %s AND move_history_pMove = %s AND move_history_pResult = %s")
-        cursor = self.cnx.cursor(buffered=True)
         n = random.randrange(10,20)
         try:
             self.connect()
