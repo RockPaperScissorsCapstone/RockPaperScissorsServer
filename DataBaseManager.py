@@ -187,24 +187,31 @@ class DBManager:
                     result2 += 1
                 elif x == 3:
                     result3 += 1
-            print(result1)
-            print(result2)
-            print(result3)
+            print("The number of rocks the user recently played in this situation is %d" % result1)
+            print("The number of papers the user recently played in this situation is %d" % result2)
+            print("The number of scissors the user recently played in this sitation is %d" % result3)
             self.cnx.commit()
             if result1 > result2 and result1 > result3:#rock most likely
+                print("Rock is most likely, respond scissors")
                 return 2
             elif result2 > result3 and result2 > result1:#paper most likely
+                print("Paper is most likely, respond scissors")
                 return 3
             elif result3 > result2 and result3 > result1:#scissors most likely
+                print("Scissors is most likely, respond rock")
                 return 1
             elif result1 == result2 and result2 == result3:#all three equally likely, needs to be replaced with data mining when implemented
+                print("Insufficient data, respond randomly")
                 retval = random.randrange(1, 3)
                 return retval
             elif result1 == result2:#rock and paper equally likely
+                print("Rock and paper tied, respond paper to tie or win")
                 return 2
             elif result2 == result3:#paper and scissors equally likely
+                print("Paper and scissors tied, respond scissors to tie or win")
                 return 3
             elif result3 == result1:#scissors and rock equally likely
+                print("Scissors and rock tied, respond rock to tie or win")
                 return 1
         except mysql.connector.Error as err:
             return str(err)
