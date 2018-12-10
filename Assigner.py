@@ -178,6 +178,9 @@ class Assigner(threading.Thread):
             elif(function == "BuySkin"):
                 result = APICommand.purchaseItem(myQue)
                 self.conn.sendall(str(result).encode('ascii'))
+            elif(function == "GetScore"):
+                result = APICommand.getScore(myQue)
+                self.conn.sendall(str(result).encode('ascii'))
             else:
                 print("didn't match")
                 self.conn.sendall("not a matching function".encode('ascii'))

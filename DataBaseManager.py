@@ -255,21 +255,19 @@ class DBManager:
             self.closeConnection()
 
     def getScore(self, param):
-        query = ("SELECT rps_user_score FROM rps_user WHERE rps_user_id = %s")
-        
+        query = ("SELECT rps_user_score FROM rps_user WHERE rps_user_id = %s")       
         try:
             self.connect()
             cursor = self.cnx.cursor(buffered=True)
             cursor.execute(query, param)
             retval = cursor.fetchone()
             retval = retval[0]
-            cursor.close()
-            self.cnx.close()
             return retval
         except:
-            cursor.close()
-            self.cnx.close()
             return 'error'
+        finally:
+            cursor.close()
+            self.closeConnection()
 
     def updateScore(self, param):
         winnerId = param[0]
@@ -641,7 +639,7 @@ class DBManager:
     #         self.closeConnection()
     
     def getCurrency(self, userid):
-        query = ("SELECT rps_user_currency FROM rps_user WHERE rps_user_userid = %s")
+        query = ("SELECT rps_user_currency FROM rps_user WHERE rps_user_id = %s")
         try:
             param = (userid, )
             self.connect()
@@ -671,7 +669,7 @@ class DBManager:
             self.closeConnection()
 
     def setPlayerCurrency(self, param):
-        query = ("UPDATE rps_user SET rps_user_currency = %s WHERE rps_user_userid = %s")
+        query = ("UPDATE rps_user SET rps_user_currency = %s WHERE rps_user_id = %s")
         try:
             self.connect()
             cursor = self.cnx.cursor(buffered=True)
@@ -682,6 +680,7 @@ class DBManager:
         finally:
             cursor.close()
             self.closeConnection()
+
 
 
     def closeConnection(self):

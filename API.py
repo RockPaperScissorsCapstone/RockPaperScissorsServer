@@ -146,4 +146,9 @@ class api:
         paramSetCurrency = (str(updatedCurrency), userId)
         self.dbm.setPlayerCurrency(paramSetCurrency)
         return self.dbm.purchaseItem(paramPurchase)
+
+    def getScore(self, que):
+        userId = self.Decoded(que.removefromq())
+        package = (userId, )
+        return self.dbm.getScore(package)
     
