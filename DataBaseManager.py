@@ -512,12 +512,13 @@ class DBManager:
             return 0
 
     def getUserScore(self, userid):
-        query = ("SELECT rps_user_score FROM rps_user WHERE rps_user_userid = %s", userid)
+        query = ("SELECT rps_user_score FROM rps_user WHERE rps_user_userid = %s")
         try:
             self.connect()
             cursor = self.cnx.cursor(buffered=True)
             print("getUserScore executing")
-            cursor.execute(query)
+            param = (userid, )
+            cursor.execute(query, param)
             sqlretval = cursor.fetchall()
             print(str(sqlretval[0]))
             return str(sqlretval[0])
@@ -611,16 +612,19 @@ class DBManager:
             self.closeConnection()
 
     def closeConnection(self):
-        self.DBCP.releaseConenction(self.cnx)
+        self.DBCP.releaseConnection(self.cnx)
         print("DBCP Count after release")
         print(self.DBCP.getCount())
 
     def connect(self):
         while True:
-                if(self.DBCP.getCount() > 0):
-                    self.cnx = self.DBCP.getConnection()
-                    break
-                else:
-                    time.sleep(.5)
+            self.DBCP.lockObject()
+            if(self.DBCP.getCount() > 0):
+                self.cnx = self.DBCP.getConnection()
+                self.DBCP.unlockObject()
+                break
+            else:
+                self.DBCP.unlockObject()
+                time.sleep(.5)
         print("DBCP Count after getConnection(): ")
         print(self.DBCP.getCount())

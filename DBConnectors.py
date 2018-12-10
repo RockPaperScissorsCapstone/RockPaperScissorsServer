@@ -9,9 +9,10 @@ class DBConnectors:
     lock = threading.RLock()
     def __init__(self):
         try:
+            pooling.CNX_POOL_MAXSIZE = 40
             self.cnxpool = mysql.connector.pooling.MySQLConnectionPool(
                     pool_name = "rpspool",
-                    pool_size = 32,
+                    pool_size = 40,
                     pool_reset_session= True,
                     user='rpsdb1',
                     password='tekashi69',
@@ -27,7 +28,7 @@ class DBConnectors:
                 print("error: ")
                 print(err)
 
-    def releaseConenction(self, connection):
+    def releaseConnection(self, connection):
         # self.cnxpool.add_connection(connection)
         connection.close()
         with self.lock:
@@ -35,11 +36,16 @@ class DBConnectors:
             self.availableConnections += 1
 
     def getConnection(self):
-        with self.lock:
-            print("got lock reducing availableConnections by 1")
-            self.availableConnections -= 1 
+        print("got lock reducing availableConnections by 1")
+        self.availableConnections -= 1 
         return self.cnxpool.get_connection()
 
     def getCount(self):
-        with self.lock:
-            return self.availableConnections
+        print("Got lock and returning the number of available connections")
+        return self.availableConnections
+
+    def lockObject(self):
+        self.lock.acquire()
+
+    def unlockObject(self):
+        self.lock.release()
