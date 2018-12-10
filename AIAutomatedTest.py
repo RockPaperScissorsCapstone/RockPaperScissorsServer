@@ -1,4 +1,5 @@
 from DataBaseManager import DBManager
+from DBConnectors import DBConnectors
 import csv
 def main():
     autoCycle = int(input("Enter a string of moves without spaces: "))
@@ -20,9 +21,10 @@ def main():
     losses = 0
     ties = 0
     output_writer.writerow(["Round", "Player Move", "AI move", "Result"])
+    dbcp = DBConnectors()
+    dbm = DBManager(dbcp)
     while counter < numbOfRuns:
         autoMove = listOfMoves[counter % len(listOfMoves)]
-        dbm = DBManager()
         aiMove = dbm.AI_fetch([19, pmove, presult])
         if autoMove == aiMove:
             print("The script played %d and the AI played %d, the result is a draw" % (autoMove, aiMove))
@@ -34,8 +36,7 @@ def main():
             print("The script played %d and the AI played %d, the result is an AI loss" % (autoMove, aiMove))
             result = 1
         moveInput = [19, pmove, presult, autoMove, result, counter]
-        dbm2 = DBManager()
-        dbm2.move_Insert(moveInput)
+        dbm.move_Insert(moveInput)
         pmove = autoMove
         presult = result
         counter += 1
@@ -52,7 +53,6 @@ def main():
     output_writer.writerow(["Wins", wins])
     output_writer.writerow(["Loses", losses])
     output_writer.writerow(["Ties", ties])
-    dbm3 = DBManager()
-    dbm3.autoMoveRemover()
+    dbm.autoMoveRemover()
     output_file.close()
 main()

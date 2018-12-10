@@ -192,7 +192,7 @@ class DBManager:
             print("The number of scissors the user recently played in this sitation is %d" % result3)
             self.cnx.commit()
             if result1 > result2 and result1 > result3:#rock most likely
-                print("Rock is most likely, respond scissors")
+                print("Rock is most likely, respond paper")
                 return 2
             elif result2 > result3 and result2 > result1:#paper most likely
                 print("Paper is most likely, respond scissors")
