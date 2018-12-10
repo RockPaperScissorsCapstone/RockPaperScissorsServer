@@ -2,10 +2,10 @@ from Queue import myQueue
 from DataBaseManager import DBManager
 from MultiplayerSession import MultiplayerSession
 from Session import session
+from AIRandomSession import randomSession
 import socket
 
 class api:
-
     def __init__(self, DBC):
         self.dbm = DBManager(DBC)
 
@@ -51,6 +51,10 @@ class api:
     def CreateSession(self, conn):
         apiSession = session(self.dbm) 
         return apiSession.startSession(conn)
+
+    def PlayAgainstAIRandom(self, conn):
+        aiRandomSession = randomSession(self.dbm)
+        return aiRandomSession.startRandomSession(conn)
 
     def UpdateWinLoss(self, que):
         wins = self.Decoded(que.removefromq())
