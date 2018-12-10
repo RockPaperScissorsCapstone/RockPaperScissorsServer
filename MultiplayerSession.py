@@ -217,6 +217,9 @@ class MultiplayerSession(threading.Thread):
             updatedConn1Currency = self.dbm.updateCurrency(buffer)
             print(updatedConn1Currency)
             conn1.sendall(updatedConn1Currency.encode('ascii'))
+            winnerScore = self.dbm.getScore([conn1ID])
+            loserScore = self.dbm.getScore([conn2ID])
+            self.dbm.updateScore([conn1ID, winnerScore, conn2ID, loserScore])
             self.messenger.addIpAddress(self.player1Address[0])
             self.messenger.addIpAddress(self.player2Address[0])
         else:
@@ -226,5 +229,8 @@ class MultiplayerSession(threading.Thread):
             updatedConn2Currency = self.dbm.updateCurrency(buf)
             print(updatedConn2Currency)
             conn2.sendall(updatedConn2Currency.encode('ascii'))
+            winnerScore = self.dbm.getScore([conn2ID])
+            loserScore = self.dbm.getScore([conn1ID])
+            self.dbm.updateScore([conn2ID, winnerScore, conn1ID, loserScore])
             self.messenger.addIpAddress(self.player1Address[0])
             self.messenger.addIpAddress(self.player2Address[0])

@@ -18,7 +18,7 @@ class DBConnectors:
                     password='tekashi69',
                     host='rpsdb1.cs0eeakwgvyu.us-east-2.rds.amazonaws.com',
                     database='rpsdb1')
-            self.availableConnections = 32
+            self.availableConnections = 40
         except mysql.connector.Error as err:
             if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
                 print("Something is wrong with your user name or password")
