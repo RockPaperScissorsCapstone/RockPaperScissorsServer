@@ -41,12 +41,12 @@ class ConnectionManager(threading.Thread):
 
                 # When connection is established create a que with which to store the messages in.
                 conn, addr = s.accept()
-                print(addr)
-                print(addr[0])
-                print(addr[1])
-                print(conn)
+                # print(addr)
+                # print(addr[0])
+                # print(addr[1])
+                # print(conn)
                 #worker = threading.Thread(target=Assigner, args=(conn,))
                 worker = Assigner(conn, self.socketQue, addr, self.messenger, self.statusQue, self.DBC)
                 threads.append(worker)
-                print("Starting worker")
+                # print("Starting worker")
                 worker.start()

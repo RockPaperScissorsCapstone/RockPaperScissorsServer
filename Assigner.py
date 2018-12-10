@@ -17,11 +17,11 @@ class Assigner(threading.Thread):
         self.statusQue = statusQue
         self.DBC = DBC
         #run = threading.Thread(target=self,args=())
-        print("Started thread")
+        # print("Started thread")
         #run.start()
 
     def run(self):
-        print("started run")
+        # print("started run")
         myQue = myQueue()
         result = None
         function = None
@@ -35,21 +35,21 @@ class Assigner(threading.Thread):
                 if data.decode('ascii') == "end":
                     break
                 myQue.addtoq(data)
-                print(data.decode('ascii'))
+                # print(data.decode('ascii'))
                 self.conn.sendall(data)
             function = (myQue.removefromq()).decode('ascii')
-            print("function = " + function)
-            print("reached")
+            # print("function = " + function)
+            # print("reached")
             APICommand = api(self.DBC)
             # Starts the Create Account Process
             if(function == "CreateAccount"):
                 result = APICommand.CreateAccount(myQue)
-                print("result: " + result)
+                # print("result: " + result)
                 self.conn.sendall(result.encode(encoding='ascii'))
             # Starts the update Account process NEEDS TO BE REDONE OLD FUNCTION IS DEPRICATED
             elif(function == "UpdateAccountInfo"):
                 result = APICommand.UpdateAccountInfo(myQue)
-                print("result: " + result)
+                # print("result: " + result)
                 self.conn.sendall(result.encode('ascii'))
             # Starts the login process
             elif(function == "Login"):
@@ -62,19 +62,19 @@ class Assigner(threading.Thread):
                 #     return
                 onlineUsersList = []
                 for loggedInUser in self.statusQue.queue:
-                    print(loggedInUser[1])
+                    # print(loggedInUser[1])
                     onlineUsersList.append(loggedInUser[1])
                 if myQue.queue[1].decode('ascii') in onlineUsersList:
                     self.conn.sendall("Login Failed".encode('ascii'))
                     return
                 self.statusQue.addtoq(loginInformation)
                 result = APICommand.Login(myQue)
-                print("result: " + result)
+                # print("result: " + result)
                 self.conn.send(result.encode(encoding='ascii'))
             # Starts game with AI
             elif(function == "AIGame"):
                 result = APICommand.AI_fetch(myQue)
-                print("result: " + result)
+                # print("result: " + result)
                 self.conn.sendall(str(result).encode(encoding='ascii'))
             # Starts session
             elif(function == "Session"):
@@ -82,12 +82,12 @@ class Assigner(threading.Thread):
                 self.conn.sendall(str(result).encode(encoding='ascii'))
             elif(function == "UpdateWinLoss"):
                 result = APICommand.UpdateWinLoss(myQue)
-                print("result: " + result)
+                # print("result: " + result)
                 self.conn.sendall(result.encode('ascii'))
             # Updates winner and loser scores
             elif(function == "UpdateScore"):
                 result = APICommand.UpdateScore(myQue)
-                print("result: " + result)
+                # print("result: " + result)
                 self.conn.sendall(result.encode('ascii'))
             # Retrieves leaderbord data
             elif(function == "Leaderboard"):
@@ -168,9 +168,9 @@ class Assigner(threading.Thread):
                 print(myQue.queue[0].decode('ascii'))
                 for loggedInUser in self.statusQue.queue:
                     if (callingIP == loggedInUser[0] and callingUsername == loggedInUser[1]):
-                        print("Found the logoff user!")
+                        # print("Found the logoff user!")
                         removedUser = self.statusQue.removeUserFromQueue(loggedInUser)
-                        print("Removed: ", removedUser)
+                        # print("Removed: ", removedUser)
                 self.conn.sendall("logged off".encode('ascii'))
             elif(function == "UpdateCurrency"):
                 result = APICommand.purchaseItem(myQue)
@@ -179,6 +179,6 @@ class Assigner(threading.Thread):
                 result = APICommand.purchaseItem(myQue)
                 self.conn.sendall(str(result).encode('ascii'))
             else:
-                print("didn't match")
+                # print("didn't match")
                 self.conn.sendall("not a matching function".encode('ascii'))
-        print("Connection Closed")
+        # print("Connection Closed")

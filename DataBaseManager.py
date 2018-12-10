@@ -220,7 +220,6 @@ class DBManager:
             self.closeConnection()
 
     def move_Insert(self, move_Info):
-        print("move insert")
         query = (
             "INSERT into move_history (rps_user_id, move_history_pMove, move_history_pResult, move_history_move, move_history_result, move_history_round) VALUES (%s, %s, %s, %s, %s, %s)"
         )
@@ -319,14 +318,16 @@ class DBManager:
             self.closeConnection()
 
     def getInventory(self, userId):
-        query = ("SELECT purchase_skin_tag FROM purchases WHERE purchase_user_id = $s")
+        query = ("SELECT purchase_skin_tag FROM purchases WHERE purchase_user_id = %s")
         try:
             self.connect()
             cursor = self.cnx.cursor(buffered=True)
-            cursor.execute(query, userId)
+            param = (userId, )
+            cursor.execute(query, param)
             #Places all rows of query into 'result'
             result = cursor.fetchall()
-            self.closeConnection()
+            print("getInventory: ", result)
+            # self.closeConnection()
             return result
             #  Old code
             #self.cnx.commit()
@@ -641,7 +642,7 @@ class DBManager:
     #         self.closeConnection()
     
     def getCurrency(self, userid):
-        query = ("SELECT rps_user_currency FROM rps_user WHERE rps_user_userid = %s")
+        query = ("SELECT rps_user_currency FROM rps_user WHERE rps_user_id = %s")
         try:
             param = (userid, )
             self.connect()
@@ -649,7 +650,7 @@ class DBManager:
             cursor.execute(query, param)
             result = cursor.fetchall()
             print("updated currency: ", result[0])
-            return str(result[0])
+            return result[0]
         except mysql.connector.Error as err:
             return str(err)
         finally:
@@ -658,11 +659,12 @@ class DBManager:
 
 
     def purchaseItem(self, param):
-        query = ("INSERT INTO purchases (purchase_user_id, purchase_skin_id) VALUES (%s, %s)")
+        query = ("INSERT INTO purchases (purchase_user_id, purchase_skin_tag) VALUES (%s, %s)")
         try:
             self.connect()
             cursor = self.cnx.cursor(buffered=True)
             cursor.execute(query, param)
+            self.cnx.commit()
             return "Set player Currency!"
         except mysql.connector.Error as err:
             return str(err)
@@ -671,13 +673,15 @@ class DBManager:
             self.closeConnection()
 
     def setPlayerCurrency(self, param):
-        query = ("UPDATE rps_user SET rps_user_currency = %s WHERE rps_user_userid = %s")
+        query = ("UPDATE rps_user SET rps_user_currency = %s WHERE rps_user_id = %s")
         try:
             self.connect()
             cursor = self.cnx.cursor(buffered=True)
             cursor.execute(query, param)
+            self.cnx.commit()
             return "Set player Currency!"
         except mysql.connector.Error as err:
+            print(str(err))
             return str(err)
         finally:
             cursor.close()
@@ -686,8 +690,8 @@ class DBManager:
 
     def closeConnection(self):
         self.DBCP.releaseConnection(self.cnx)
-        print("DBCP Count after release")
-        print(self.DBCP.getCount())
+        # print("DBCP Count after release")
+        # print(self.DBCP.getCount())
 
     def connect(self):
         while True:
@@ -699,5 +703,5 @@ class DBManager:
             else:
                 self.DBCP.unlockObject()
                 time.sleep(.5)
-        print("DBCP Count after getConnection(): ")
-        print(self.DBCP.getCount())
+        # print("DBCP Count after getConnection(): ")
+        # print(self.DBCP.getCount())

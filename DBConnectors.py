@@ -32,16 +32,13 @@ class DBConnectors:
         # self.cnxpool.add_connection(connection)
         connection.close()
         with self.lock:
-            print("got lock increasing availableConnections by 1")
             self.availableConnections += 1
 
     def getConnection(self):
-        print("got lock reducing availableConnections by 1")
         self.availableConnections -= 1 
         return self.cnxpool.get_connection()
 
     def getCount(self):
-        print("Got lock and returning the number of available connections")
         return self.availableConnections
 
     def lockObject(self):

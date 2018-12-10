@@ -10,9 +10,9 @@ class api:
         self.dbm = DBManager(DBC)
 
     def Decoded(self, data):
-        print(data)
+        # print(data)
         result = data.decode('cp437')
-        print(result)
+        # print(result)
         return result
 
     def CreateAccount(self, que):
@@ -141,7 +141,8 @@ class api:
         skinId = self.Decoded(que.removefromq())
         cost = self.Decoded(que.removefromq())
         playerCurrency = self.dbm.getCurrency(userId)
-        updatedCurrency = int(playerCurrency) - int(cost)
+        print(playerCurrency[0])
+        updatedCurrency = int(playerCurrency[0]) - int(cost)
         paramPurchase = (userId, skinId)
         paramSetCurrency = (str(updatedCurrency), userId)
         self.dbm.setPlayerCurrency(paramSetCurrency)
