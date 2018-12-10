@@ -125,7 +125,6 @@ class Assigner(threading.Thread):
                     messageList = self.messages.getList()
                     if self.addr[0] in messageList:
                         self.messages.removeFromList(self.addr[0])
-                        self.conn.sendall(("Socket Closing".encode('ascii')))
                         break
                     else:
                         time.sleep(.25)
