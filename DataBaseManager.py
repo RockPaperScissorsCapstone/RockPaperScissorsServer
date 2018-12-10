@@ -597,11 +597,12 @@ class DBManager:
     #         self.closeConnection()
     
     def getCurrency(self, userid):
-        query = ("SELECT rps_user_currency FROM rps_user WHERE rps_user_userid = %s", userid)
+        query = ("SELECT rps_user_currency FROM rps_user WHERE rps_user_userid = %s")
         try:
+            param = (userid, )
             self.connect()
             cursor = self.cnx.cursor(buffered=True)
-            cursor.execute(query)
+            cursor.execute(query, param)
             result = cursor.fetchall()
             print("updated currency: ", result[0])
             return str(result[0])

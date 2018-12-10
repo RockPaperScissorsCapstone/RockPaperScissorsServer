@@ -141,9 +141,9 @@ class api:
         skinId = self.Decoded(que.removefromq())
         cost = self.Decoded(que.removefromq())
         playerCurrency = self.dbm.getCurrency(userId)
-        updatedCurrency = playerCurrency - cost
+        updatedCurrency = int(playerCurrency) - int(cost)
         paramPurchase = (userId, skinId)
-        paramSetCurrency = (updatedCurrency, userId)
-        self.dbm.updateCurrency(paramSetCurrency)
+        paramSetCurrency = (str(updatedCurrency), userId)
+        self.dbm.setPlayerCurrency(paramSetCurrency)
         return self.dbm.purchaseItem(paramPurchase)
     
