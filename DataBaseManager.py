@@ -249,8 +249,10 @@ class DBManager:
 
     def getScore(self, param):
         query = ("SELECT rps_user_score FROM rps_user WHERE rps_user_id = %s")
-        cursor = self.cnx.cursor()
+        
         try:
+            self.connect()
+            cursor = self.cnx.cursor(buffered=True)
             cursor.execute(query, param)
             retval = cursor.fetchone()
             retval = retval[0]
