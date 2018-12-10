@@ -497,6 +497,27 @@ class DBManager:
             cursor.close()
             self.closeConnection()
 
+    def getUsernameFromPlayerID(self, param):
+        print("We are in get player id")
+        print(param)
+        query = ("SELECT rps_user_username FROM rps_user WHERE  rps_user_ID = %s")
+        try:
+            self.connect()
+            cursor = self.cnx.cursor(buffered=True)
+            userName = [param, ]
+            cursor.execute(query, userName)
+            retval = cursor.fetchone()
+            print(retval[0])
+            return str(retval[0])
+        except mysql.connector.Error as err:
+            err = str(err)
+            print(err)
+            return err
+        finally:
+            cursor.close()
+            self.closeConnection()
+
+
     def autoMoveRemover(self):
         query = "DELETE FROM move_history WHERE rps_user_id = 19"
         try:
