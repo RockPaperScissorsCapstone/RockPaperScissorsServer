@@ -504,7 +504,7 @@ class DBManager:
         try:
             self.connect()
             cursor = self.cnx.cursor(buffered=True)
-            userName = [param, ]
+            userName = (param, )
             cursor.execute(query, userName)
             retval = cursor.fetchone()
             print(retval[0])
