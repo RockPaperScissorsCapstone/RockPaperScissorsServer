@@ -555,7 +555,7 @@ class DBManager:
             return 0
 
     def getUserScore(self, userid):
-        query = ("SELECT rps_user_score FROM rps_user WHERE rps_user_userid = %s")
+        query = ("SELECT rps_user_score FROM rps_user WHERE rps_user_id = %s")
         try:
             self.connect()
             cursor = self.cnx.cursor(buffered=True)
@@ -684,8 +684,6 @@ class DBManager:
         finally:
             cursor.close()
             self.closeConnection()
-
-
 
     def closeConnection(self):
         self.DBCP.releaseConnection(self.cnx)

@@ -4,7 +4,7 @@ from mysql.connector import pooling
 from mysql.connector import errorcode
 from DBConnectors import DBConnectors
 connectors = DBConnectors()
-class DBConnectorsTestCases(unittest.TestCase):
+class test_DBConnectors_TestCases(unittest.TestCase):
     def test_DBConnectors_GetConnection(self):
         connectors.lockObject()
         cnx = connectors.getConnection()
@@ -20,5 +20,5 @@ class DBConnectorsTestCases(unittest.TestCase):
         print(connectors.getCount())
         connectors.unlockObject()
 
-# if __name__ == "__main__":
-#     unittest.main()
+if __name__ == "__main__":
+    unittest.main()
